@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Arquitetura Qualidade</title>
+<!--
+=====================================================================
+  TEMPLATE · ARQUITETURA DE PROCESSOS DE UM SETOR DO BACKOFFICE
+  Padrão replicado de "Qualidade (Vic)" e "Fornecedores (Henry)".
+  Preencher as áreas marcadas com {{...}} e os arrays TRAILS / LANES
+  / AUTOS no final do arquivo. Nada mais precisa mudar.
+  Autor do modelo: Rayanne Oliveira · BackOffice Franquias
+=====================================================================
+-->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+/* padrão institucional Seazone: hero navy, colunas por macroprocesso, popover em hover/click */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+ color-scheme:light;
+ --bg:oklch(96.5% .012 260);--paper:oklch(99.4% .003 250);
+ --ink:oklch(24% .02 255);--ink2:oklch(42% .018 255);--ink3:oklch(58% .014 255);
+ --line:oklch(89% .01 255);--soft:oklch(95% .012 260);
+ --blue:oklch(48% .21 258);--bluebg:oklch(95% .03 258);
+ --teal:oklch(47% .1 200);--tealbg:oklch(95.5% .03 200);
+ --red:oklch(52% .17 27);--redbg:oklch(95.5% .03 27);
+ --amber:oklch(55% .12 70);--amberbg:oklch(95.5% .04 80);
+ --green:oklch(50% .11 155);--greenbg:oklch(95.5% .035 155);
+ --violet:oklch(48% .16 300);--violetbg:oklch(95.5% .03 300);
+ --navy:oklch(19% .05 260);--navybg:oklch(93% .02 260);--coral:oklch(70% .17 32);
+ --hero-fg:oklch(94% .01 260);--hero-muted:oklch(72% .02 260);--hero-line:oklch(35% .04 260);
+ --sans:"Bricolage Grotesque",system-ui,sans-serif;--serif:Literata,Georgia,serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 14px/1.5 var(--sans)}
+.code{font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums}
+
+.hero{background:var(--navy);color:var(--hero-fg);padding-block:24px 36px;padding-inline:24px}
+.hero-inner{max-width:1500px;margin:0 auto}
+.masthead{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;border-bottom:1px solid var(--hero-line);margin-bottom:24px;padding-bottom:12px}
+.wordmark{font:700 14px/1 var(--sans);letter-spacing:.14em;color:var(--paper);display:flex;align-items:center;gap:12px;text-transform:uppercase;flex-wrap:wrap}
+.wordmark span:not(.sz-logo):not(.sz-house){color:var(--hero-muted);font-weight:500;letter-spacing:.12em}
+.sz-logo{display:inline-flex;align-items:center;gap:2px;font:700 30px/1 var(--sans);letter-spacing:-.04em;text-transform:none;color:currentColor}
+.sz-house{display:inline-block;width:.82em;height:.84em;flex-shrink:0;margin-inline:1px;vertical-align:-.04em}
+.sz-house svg{width:100%;height:100%;display:block}
+.mast-date{font:500 13px/1 var(--sans);color:var(--hero-muted);letter-spacing:.06em;text-transform:uppercase}
+.eyebrow{font:700 12px/1.3 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--coral);display:block}
+h1{font:700 clamp(28px,4vw,44px)/1.06 var(--sans);letter-spacing:-.01em;margin:10px 0 14px;color:var(--paper);text-wrap:balance;max-width:24ch}
+.lede{font:400 17px/1.55 var(--serif);max-width:70ch;color:var(--hero-fg);margin:0}
+.sub{font:700 13px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--coral);margin:16px 0 0}
+
+.wrap{max-width:1500px;margin:0 auto;padding-block:24px 56px;padding-inline:24px;display:flex;flex-direction:column;gap:18px}
+.panel{background:var(--paper);border-radius:10px;padding:12px 16px;box-shadow:0 2px 12px oklch(20% .05 260 / .06),0 1px 3px oklch(20% .05 260 / .04)}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px 28px;font-size:13px;color:var(--ink2)}
+.summary .g{display:flex;flex-direction:column;gap:6px;min-width:0}
+.summary .gl{font:700 11px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+.summary .gv{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.summary b{font-variant-numeric:tabular-nums;color:var(--ink);font-size:15px}
+.hint{font-size:12.5px;color:var(--ink3);margin:0}
+
+.tabs{display:flex;gap:2px;border-bottom:2px solid var(--line);padding-inline:4px;margin-top:4px}
+.tab{background:transparent;border:0;padding:10px 18px;font:700 13px/1 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:0}
+.tab[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--coral)}
+.tab:hover:not([aria-selected="true"]){color:var(--ink2)}
+.tab:focus-visible{outline:2px solid var(--coral);outline-offset:2px;border-radius:4px}
+.tabpanel{display:flex;flex-direction:column;gap:18px}
+.tabpanel[hidden]{display:none}
+
+.scroll{overflow-x:auto;padding-bottom:8px}
+.flow{min-width:1440px;display:flex;flex-direction:column;gap:18px}
+.trail{display:flex;flex-direction:column;gap:10px;border-radius:12px;padding:14px;background:oklch(98% .008 260);border:1px solid var(--line)}
+.trail-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.trail-h .tn{font:700 16px/1.2 var(--sans);color:var(--c)}
+.trail-h .tk{font:700 11px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--paper);background:var(--c);padding:4px 7px;border-radius:4px}
+.trail-h .to{font:400 13px/1.4 var(--serif);color:var(--ink2)}
+.main{display:grid;align-items:start}
+.col{display:flex;flex-direction:column;align-items:stretch}
+.fin{--c:var(--blue);--cs:var(--bluebg)} .fin2{--c:var(--teal);--cs:var(--tealbg)} .fin3{--c:var(--green);--cs:var(--greenbg)} .fin4{--c:var(--violet);--cs:var(--violetbg)} .ges{--c:var(--navy);--cs:var(--navybg)} .sup{--c:var(--ink2);--cs:var(--soft)}
+.head{background:var(--c);color:var(--paper);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;text-align:left;border:0;font:inherit;cursor:pointer}
+.head .v{font:700 11px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.head .n{font:700 15px/1.2 var(--sans)}
+.head .o{font:400 12px/1.4 var(--serif);opacity:.92}
+.head .e{font-size:11.5px;line-height:1.35;background:oklch(100% 0 0 / .14);border-radius:6px;padding:5px 7px;margin-top:2px}
+.join{height:44px;display:flex;align-items:center;justify-content:center;color:var(--ink3);font:700 18px/1 var(--sans)}
+.join svg{width:100%;height:14px;overflow:visible}
+.join line{stroke:var(--ink3);stroke-width:1.6}
+.join path{fill:var(--ink3)}
+.down{height:16px;display:flex;justify-content:center}
+.down svg{width:10px;height:16px}
+.down line{stroke:var(--c);stroke-width:1.6}
+.down path{fill:var(--c)}
+
+.box{background:var(--paper);border:1.5px solid var(--c);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%}
+.box:hover,.box:focus-visible,.box[aria-expanded="true"],.head:focus-visible,.chip:hover,.chip:focus-visible,.chip[aria-expanded="true"]{outline:2px solid var(--coral);outline-offset:2px}
+.box .t{font-weight:700;line-height:1.3;display:flex;gap:6px;align-items:baseline}
+.box .t .code{color:var(--c);flex:0 0 auto}
+.box .o{font:400 12px/1.4 var(--serif);color:var(--ink2)}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+
+.mode,.ia,.ex,.imp,.chk{font:700 10px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;padding:4px 6px;border-radius:4px;white-space:nowrap}
+.mode.auto{color:var(--green);background:var(--greenbg)}
+.mode.misto{color:var(--amber);background:var(--amberbg)}
+.mode.manual{color:var(--red);background:var(--redbg)}
+.ia{color:var(--violet);background:var(--paper);border:1px solid var(--violet)}
+.ia.i0{color:var(--ink3);border-color:var(--line)}
+.ia.i2{color:var(--paper);background:var(--violet)}
+.ex{color:var(--ink2);background:var(--soft)}
+.imp{color:var(--coral);background:var(--paper);border:1px dashed var(--coral)}
+.chk{color:var(--amber);background:var(--paper);border:1px solid var(--amber)}
+
+.value{background:var(--navy);color:var(--hero-fg);border-radius:10px;padding:12px;font-size:12.5px;display:flex;flex-direction:column;gap:6px;text-align:center}
+.value b{font:700 13px/1.2 var(--sans);color:var(--coral)}
+.value span{color:var(--hero-fg)}
+.value .meta{font-weight:700;color:var(--paper);background:oklch(100% 0 0 / .12);border-radius:6px;padding:4px}
+
+.base{display:grid;grid-template-columns:3fr 1fr;gap:14px}
+.lane{border-radius:12px;background:var(--cs);padding:12px;display:flex;flex-direction:column;gap:10px}
+.lane .lab{font:700 11px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--c)}
+.lane .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.lane .grp{display:flex;flex-direction:column;gap:6px;min-width:0}
+.lane .gh{font-weight:700;font-size:13px}
+.lane .gh .code{color:var(--c);margin-right:6px}
+.lane .go{font:400 12px/1.4 var(--serif);color:var(--ink2)}
+.chips{display:flex;flex-direction:column;gap:6px}
+.chip{background:var(--paper);border:1.5px solid var(--c);border-radius:6px;padding:5px 8px;font:inherit;font-size:12.5px;text-align:left;cursor:pointer;color:inherit;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.chip .code{color:var(--c)}
+.chip .nm{flex:1 1 120px;min-width:0}
+.new{font:700 10px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--paper);background:var(--coral);padding:3px 5px;border-radius:4px}
+.upnote{font-size:12.5px;color:var(--ink3);text-align:center;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:var(--ink2);align-items:center}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+#pop{position:fixed;z-index:20;width:min(380px,calc(100vw - 32px));max-height:min(70vh,560px);overflow:auto;background:var(--paper);border:1.5px solid var(--navy);border-radius:10px;box-shadow:0 12px 32px oklch(20% .05 260 / .22);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+#pop[hidden]{display:none}
+#pop .ph{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+#pop h3{margin:0;font:700 16px/1.25 var(--sans);text-wrap:balance}
+#pop h3 .code{color:var(--blue);margin-right:6px}
+#pop .x{border:0;background:var(--soft);border-radius:6px;font:700 14px/1 var(--sans);padding:6px 8px;cursor:pointer;color:var(--ink2)}
+#pop .sec{display:flex;flex-direction:column;gap:3px}
+#pop .sl{font:700 10.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink3)}
+#pop p{margin:0;font:400 13px/1.5 var(--serif)}
+#pop ul{margin:0;padding-left:18px;font:400 13px/1.5 var(--serif)}
+#pop .aud{background:var(--amberbg);border-radius:6px;padding:7px 9px}
+#pop .aud .sl{color:var(--amber)}
+#pop .opp{background:var(--bluebg);border-radius:6px;padding:7px 9px}
+#pop .opp .sl{color:var(--blue)}
+#pop .impb{background:oklch(96% .03 32);border-radius:6px;padding:7px 9px}
+#pop .impb .sl{color:var(--coral)}
+#pop .chkb{border:1px dashed var(--amber);border-radius:6px;padding:7px 9px}
+#pop .chkb .sl{color:var(--amber)}
+#pop .tools{display:flex;flex-wrap:wrap;gap:4px}
+.tool{font-size:11px;line-height:1.2;padding:3px 8px;border-radius:999px;background:var(--soft);border:1px solid var(--line);color:var(--ink2);text-decoration:none}
+a.tool{color:var(--blue);border-color:var(--blue);background:var(--paper)}
+a.tool:hover,a.tool:focus-visible{background:var(--bluebg);outline:none}
+
+.instfoot{margin-top:32px;padding-top:20px;border-top:2px solid var(--ink);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
+.instfoot .wm{font:700 14px/1.4 var(--sans);letter-spacing:.14em;color:var(--blue);text-transform:uppercase}
+.instfoot .wm .sz-logo{color:var(--navy);font-size:22px}
+.instfoot .wm>span:not(.sz-logo){display:block;color:var(--ink2);font-weight:500;letter-spacing:.08em;font-size:12px;margin-top:4px}
+.instfoot .who{font-size:13px;color:var(--ink3);text-align:right;line-height:1.6}
+.instfoot .who b{color:var(--ink);font-weight:700;font-size:14px;display:block}
+.autos{display:flex;flex-direction:column;gap:12px}
+.autos-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.autos-h .tn{font:700 16px/1.2 var(--sans);color:var(--violet)}
+.autos-h .to{font:400 13px/1.4 var(--serif);color:var(--ink2)}
+.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.agrp{display:flex;flex-direction:column;gap:8px;min-width:0}
+.agrp .lab{font:700 11px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--violet)}
+.acard{background:var(--paper);border:1.5px solid var(--violet);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.acard .t{font-weight:700;line-height:1.3;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+.acard .t .code{color:var(--violet)}
+.acard .o{font:400 12px/1.4 var(--serif);color:var(--ink2)}
+.acard .f{font-size:11.5px;color:var(--ink3)}
+.st{font:700 10px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;padding:4px 6px;border-radius:4px;white-space:nowrap}
+.st.ar{color:var(--green);background:var(--greenbg)} .st.val{color:var(--amber);background:var(--amberbg)} .st.des{color:var(--ink2);background:var(--soft)} .st.dem{color:var(--blue);background:var(--bluebg)}
+.steps{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11.5px;color:var(--ink3)}
+.stepb{font:700 11px/1 var(--mono);color:var(--blue);background:var(--paper);border:1px solid var(--blue);border-radius:4px;padding:3px 5px;cursor:pointer}
+.stepb:hover,.stepb:focus-visible,.stepb[aria-expanded="true"]{outline:2px solid var(--coral);outline-offset:1px}
+@media (max-width:640px){.wrap,.hero{padding-inline:16px} .instfoot .who{text-align:left} .base{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){#pop{animation:pin .12s ease-out}}
+@keyframes pin{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<!-- =====================================================================
+     1. HERO (cabeçalho navy)
+     - wordmark Seazone + nome do setor (ex.: "Franquias · Qualidade")
+     - data e versão (ex.: "Rascunho v1 · 14/10/2026")
+     - eyebrow fixa: "Arquitetura de processos"
+     - h1 com o nome do setor
+     - lede (parágrafo serifa) com a missão do setor em uma frase
+     - sub (coral) com a tagline curta ("3-5 palavras que grudem")
+===================================================================== -->
+<section class="hero">
+ <div class="hero-inner">
+  <div class="masthead">
+   <div class="wordmark"><span class="sz-logo" role="img" aria-label="Seazone">sea<span class="sz-house"><svg viewBox="0 0 564 575" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"><path d="M543.226 178.172L442.93 119.392C443.194 117.952 443.72 116.643 443.72 115.203V26.5752C443.72 11.913 431.743 0 417.001 0H363.562C348.821 0 336.843 11.913 336.843 26.5752V57.6015L300.516 36.3936C285.774 27.6225 266.294 29.0626 252.605 39.1428C252.342 39.2737 252.079 39.2737 251.947 39.4046L20.951 172.543C1.73419 183.932 -6.29474 210.507 5.55122 230.406C17.9237 251.09 45.301 256.588 64.5178 245.199L78.3381 237.213C62.017 269.025 51.7505 305.026 51.7505 344.169C51.7505 406.221 75.7056 467.226 119.799 511.344C137.173 528.624 157.443 543.156 179.555 553.759C196.666 562.007 214.567 568.814 233.257 572.218C258.002 576.669 283.8 574.444 308.808 574.444C335.922 574.444 363.036 574.444 390.018 574.444C414.5 574.444 439.113 574.575 463.99 574.575C470.176 574.575 476.231 573.004 481.759 570.254C488.866 566.72 492.947 562.792 497.685 556.509C502.95 549.57 506.635 541.061 506.635 532.159V252.923C525.062 259.599 547.306 253.839 558.363 235.511C570.34 215.613 562.311 189.038 542.963 177.648L543.226 178.172ZM427.794 348.751C427.794 433.582 370.012 502.573 282.878 502.573C195.745 502.573 131.777 429.131 131.777 344.3C131.777 259.468 195.745 188.776 282.878 188.776C370.012 188.776 427.794 254.232 427.794 338.147V348.751Z" fill="#EB615E"/></svg></span>zone</span><span>· Franquias · Qualidade</span></div>
+   <span class="mast-date">Rascunho v6 · 19/10/2026</span>
+  </div>
+  <span class="eyebrow">Arquitetura de processos</span>
+  <h1>Qualidade</h1>
+  <p class="lede">Quatro frentes: cuidar da nota nas OTAs, proteger a marca no Reclame Aqui, fiscalizar a franquia com ocorrências e multas, e monitorar a operação para avisar antes que o problema apareça. Toda a cadeia termina no mesmo lugar: imóveis com nota acima de 4,80 e proprietário retido.</p>
+  <p class="sub">Padrão medido, desvio tratado, franquia alinhada.</p>
+ </div>
+</section>
+
+<div class="wrap">
+  <!-- =====================================================================
+       2. SUMMARY (panel de contagens)
+       - Preenchido pelo JS a partir dos arrays TRAILS/LANES.
+       - Mostra: total de processos, modo (auto/misto/manual), uso de IA (0/1/2),
+                 quem executa, interface com a Implantação, pontos a validar.
+       - NÃO EDITAR o conteúdo, só os arrays no final.
+  ===================================================================== -->
+  <div class="panel summary" id="summary"></div>
+
+  <!-- =====================================================================
+       NAV DE ABAS
+       - Aba 1: Arquitetura (trilhas + lanes de Gestão e Suporte)
+       - Aba 2: Agentes, extensões e rotinas
+  ===================================================================== -->
+  <nav class="tabs" role="tablist" aria-label="Seções do documento">
+    <button class="tab" role="tab" type="button" data-tab="arq" aria-selected="true" aria-controls="t-arq">Arquitetura</button>
+    <button class="tab" role="tab" type="button" data-tab="aut" aria-selected="false" aria-controls="t-aut">Agentes, extensões e rotinas</button>
+  </nav>
+
+  <!-- =====================================================================
+       ABA 1 · ARQUITETURA
+       - Instrução + Trilhas (flow) + Lanes de Gestão e Suporte (base)
+  ===================================================================== -->
+  <section class="tabpanel" id="t-arq" role="tabpanel" aria-labelledby="tab-arq">
+    <p class="hint">Passe o mouse ou clique em qualquer processo para ver objetivo, entrega, como funciona, auditoria, interface com a Implantação e ferramentas. Clique no cabeçalho de cada coluna para ver o valor que ela entrega.</p>
+
+    <!-- 3. FLOW: as trilhas de macroprocessos
+         - Cada trilha é uma linha horizontal com N colunas (uma por MPx).
+         - A última coluna é um "value box" navy com a cadeia de valor.
+         - 1 trilha mínima; 2 só se o setor tem fluxos realmente independentes. -->
+    <div class="scroll">
+      <div class="flow" id="flow">
+        <p class="upnote">▲ As faixas abaixo sustentam as trilhas ▲</p>
+        <!-- 4. BASE: Lanes de Gestão e Suporte (preenchidas via JS a partir de LANES) -->
+        <div class="base" id="base"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       ABA 2 · AGENTES, EXTENSÕES E ROTINAS
+       - O que roda sozinho ou é rodado pelo time em cada etapa.
+       - Cada card: id (Ax/Ex/Sx/Rx), nome, status, frequência, objetivo e etapas atendidas.
+  ===================================================================== -->
+  <section class="tabpanel" id="t-aut" role="tabpanel" aria-labelledby="tab-aut" hidden>
+    <section class="panel autos">
+      <div class="autos-h"><span class="tn">Agentes, extensões e rotinas</span><span class="to">O que roda sozinho ou é rodado pelo time em cada etapa. Clique no número da etapa para ver o processo correspondente na aba Arquitetura.</span></div>
+      <div class="agrid" id="autos"></div>
+    </section>
+  </section>
+
+  <!-- =====================================================================
+       6. LEGENDAS (5 linhas fixas - não mexer)
+       - Modo de execução · Uso de IA · Quem executa · Implantação · Trilhas
+  ===================================================================== -->
+  <div class="legend">
+    <span><span class="mode auto">Automático</span> roda sozinho</span>
+    <span><span class="mode misto">Misto</span> roda sozinho e passa por auditoria antes de valer</span>
+    <span><span class="mode manual">Manual</span> feito pelo time ou pelo fornecedor</span>
+  </div>
+  <div class="legend">
+    <span><span class="ia i0">Sem IA</span> regra fixa ou trabalho humano</span>
+    <span><span class="ia i1">IA assiste</span> a IA sugere ou analisa, a pessoa decide</span>
+    <span><span class="ia i2">IA executa</span> a IA decide ou gera sozinha</span>
+  </div>
+  <div class="legend">
+    <span><span class="ex">Sistema</span> automação com regra fixa</span>
+    <span><span class="ex">Agente</span> agente de IA</span>
+    <span><span class="ex">Pessoa</span> coordenador, analista ou fornecedor</span>
+  </div>
+  <div class="legend">
+    <span><span class="imp">← Implantação</span> recebemos algo da Implantação</span>
+    <span><span class="imp">→ Implantação</span> entregamos algo para a Implantação</span>
+    <span><span class="chk">Validar</span> ponto deduzido, falta confirmar</span>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--blue)"></i>Trilha 1: Avaliações</span>
+    <span><i style="background:var(--teal)"></i>Trilha 2: Reclame Aqui</span>
+    <span><i style="background:var(--green)"></i>Trilha 3: Fiscalização</span>
+    <span><i style="background:var(--violet)"></i>Trilha 4: Monitoramento de qualidade</span>
+    <span><i style="background:var(--navy)"></i>Gestão: regras, medição e demandas</span>
+    <span><i style="background:var(--ink2)"></i>Suporte: ferramentas</span>
+  </div>
+
+  <!-- =====================================================================
+       7. FOOTER INSTITUCIONAL
+       - Wordmark seazone + nome do setor
+       - Nome, email e classificação ("Documento interno · data")
+  ===================================================================== -->
+  <footer class="instfoot">
+    <div class="wm"><span class="sz-logo" role="img" aria-label="Seazone">sea<span class="sz-house"><svg viewBox="0 0 564 575" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"><path d="M543.226 178.172L442.93 119.392C443.194 117.952 443.72 116.643 443.72 115.203V26.5752C443.72 11.913 431.743 0 417.001 0H363.562C348.821 0 336.843 11.913 336.843 26.5752V57.6015L300.516 36.3936C285.774 27.6225 266.294 29.0626 252.605 39.1428C252.342 39.2737 252.079 39.2737 251.947 39.4046L20.951 172.543C1.73419 183.932 -6.29474 210.507 5.55122 230.406C17.9237 251.09 45.301 256.588 64.5178 245.199L78.3381 237.213C62.017 269.025 51.7505 305.026 51.7505 344.169C51.7505 406.221 75.7056 467.226 119.799 511.344C137.173 528.624 157.443 543.156 179.555 553.759C196.666 562.007 214.567 568.814 233.257 572.218C258.002 576.669 283.8 574.444 308.808 574.444C335.922 574.444 363.036 574.444 390.018 574.444C414.5 574.444 439.113 574.575 463.99 574.575C470.176 574.575 476.231 573.004 481.759 570.254C488.866 566.72 492.947 562.792 497.685 556.509C502.95 549.57 506.635 541.061 506.635 532.159V252.923C525.062 259.599 547.306 253.839 558.363 235.511C570.34 215.613 562.311 189.038 542.963 177.648L543.226 178.172ZM427.794 348.751C427.794 433.582 370.012 502.573 282.878 502.573C195.745 502.573 131.777 429.131 131.777 344.3C131.777 259.468 195.745 188.776 282.878 188.776C370.012 188.776 427.794 254.232 427.794 338.147V348.751Z" fill="#EB615E"/></svg></span>zone</span><span>Franquias · Qualidade</span></div>
+    <div class="who"><b>Victoria Magri</b>victoria.magri@seazone.com.br<br>Documento interno · 19/10/2026</div>
+  </footer>
+</div>
+
+<!-- Popover (não editar) -->
+<div id="pop" role="dialog" aria-modal="false" hidden></div>
+
+<script>
+const URL_COMENT = "https://case-cheer.lovable.app/";
+const URL_OCORR = "https://centraldeocorrenciasemultas.lovable.app/adm/funil-ocorrencias";
+const URL_DESP = "https://sapron.com.br/despesas?status=Em+an%C3%A1lise";
+const T = {
+  coment:{n:"Lovable de comentários", u:URL_COMENT},
+  ocorr:{n:"Lovable de ocorrências", u:URL_OCORR},
+  multas:{n:"Lovable de ocorrências e multas", u:URL_OCORR},
+  nekt:{n:"Nekt · reviews_comentarios"},
+  planilha:{n:"Planilha de comentários"},
+  stays:{n:"Stays"}, ra:{n:"Reclame Aqui"}, google:{n:"Google Business Profile"},
+  airbnb:{n:"Airbnb"},
+  slack:{n:"Slack"}, script:{n:"Apps Script"},
+  atividades:{n:"Sapron · Central de Atividades"},
+  manutencao:{n:"Sapron · Central de Manutenção"},
+  despesas:{n:"Sapron · Central de Despesas", u:URL_DESP},
+  gmail:{n:"Gmail"}, setores:{n:"Automações de cada setor"},
+  otas:{n:"Relatórios das OTAs"}, host:{n:"Seazone Host"},
+  meet:{n:"Google Meet"}, materiais:{n:"Materiais próprios"},
+  taskdex:{n:"Taskdex · Atividades Operação Iara", u:"https://taskdex.seazone.dev"},
+  claude:{n:"Claude"}
+};
+
+const MODE = {auto:"Automático", misto:"Misto", manual:"Manual"};
+const IA = ["Sem IA","IA assiste","IA executa"];
+const EX = {sistema:"Sistema", agente:"Agente", pessoa:"Pessoa"};
+const IMP = {recebe:"← Implantação", envia:"→ Implantação"};
+
+const QUAL = "Qualidade (Victoria)";
+const DESENHO = "Em desenho: a rotina é criada pela Qualidade e agendada pela Ray. Ainda não roda.";
+
+const TRAILS = [
+ {cls:"fin", k:"Trilha 1", n:"Avaliações",
+  o:"Cuidar da nota nas OTAs: ouvir e responder o hóspede, contestar o que é indevido e recuperar o imóvel que caiu.",
+  val:["Avaliação respondida","Hóspede bem atendido","Nota acima de 4,80","Proprietário retido"],
+  mps:[
+   {id:"MP1", v:"Responder", n:"Responder avaliações",
+    o:"Ouvir toda avaliação, responder e transformar reclamação em ação.",
+    e:"Toda avaliação captada, classificada, respondida e encaminhada.",
+    val:"Hóspede bem atendido",
+    opp:"A publicação das respostas ainda é manual. Automatizar a publicação na Stays é o maior ganho de tempo deste processo.",
+    p:[
+     {id:"1.1", t:"Captar avaliações das OTAs, do site e do Google", m:"auto", ia:0, ex:"sistema", who:QUAL,
+      o:"Reunir num só lugar as avaliações de todos os canais.",
+      e:"Avaliações do dia na planilha e no Lovable de comentários.",
+      how:["OTAs e site: Nekt → Apps Script diário na planilha.","Google Business Profile → Apps Script."],
+      tools:["coment","nekt","script","planilha"]},
+     {id:"1.2", t:"Classificar tema e gravidade", m:"auto", ia:2, ex:"agente", who:QUAL,
+      o:"Saber do que o hóspede reclamou e quão grave é.",
+      e:"Cada avaliação com o problema citado e a gravidade (leve, média ou grave).",
+      how:["A IA classifica o problema citado e a gravidade de cada avaliação."],
+      aud:"Auditoria por amostragem das classificações da IA.",
+      tools:["planilha","coment"]},
+     {id:"1.3", t:"Responder ao hóspede", m:"misto", ia:2, ex:"agente", who:QUAL,
+      o:"Responder toda avaliação com o tom da Seazone.",
+      e:"Avaliação respondida na plataforma de origem.",
+      how:["A IA redige a resposta e aprende com as respostas editadas.","A automação libera a reserva na Stays e eu publico.","Google: publicação à mão."],
+      aud:"Auditoria do texto antes de publicar.",
+      tools:["coment","stays","google"]},
+     {id:"1.4", t:"Encaminhar o que exige ação", m:"auto", ia:2, ex:"agente", who:QUAL,
+      o:"Garantir que nenhum problema citado pelo hóspede fique sem dono.",
+      e:"Chamado de manutenção ou ocorrência aberto.",
+      how:["Manutenção → Central de Manutenção do Sapron.","Falha da franquia → ocorrência (5.1).","Caso crítico → UTI, que é do Administrativo e Financeiro."],
+      chk:"A triagem do dia (A5) ainda está em validação.",
+      tools:["coment","manutencao"]}
+    ]},
+   {id:"MP2", v:"Contestar", n:"Contestar avaliações",
+    o:"Tirar do ar a avaliação que fere as regras da plataforma.",
+    e:"Contestações enviadas todo dia e resultado no placar.",
+    val:"Nota acima de 4,80",
+    opp:"Medir quantos pontos de nota a contestação devolve por franquia e usar isso no PDI (3.2).",
+    p:[
+     {id:"2.1", t:"Selecionar as avaliações contestáveis", m:"auto", ia:2, ex:"agente", who:QUAL,
+      o:"Achar entre as avaliações novas as que a plataforma costuma aceitar contestar.",
+      e:"Fila do dia separada por faixa de risco.",
+      how:["A skill puxa as avaliações novas do Airbnb abaixo de 5.","A IA classifica pela régua calibrada: sem letras, não se hospedou, sem conteúdo."],
+      tools:["airbnb","nekt","claude"]},
+     {id:"2.2", t:"Redigir e enviar a contestação", m:"misto", ia:2, ex:"agente", who:QUAL,
+      o:"Enviar o pedido no padrão que já deu aceite.",
+      e:"Contestações do dia enviadas, até 25.",
+      how:["A IA redige no modelo de texto que deu aceite.","O envio respeita o teto diário e o intervalo entre pedidos."],
+      aud:"Faixa nova ou item de risco alto só vai com o meu ok.",
+      tools:["airbnb","claude"]},
+     {id:"2.3", t:"Acompanhar o resultado", m:"auto", ia:2, ex:"agente", who:QUAL,
+      o:"Saber o que foi aceito e calibrar a régua.",
+      e:"Placar por faixa e relatório do dia.",
+      how:["A skill lê a resposta de cada pedido aberto.","O placar e o relatório do dia são atualizados sozinhos."],
+      tools:["airbnb","coment"]}
+    ]},
+   {id:"MP3", v:"Desenvolver", n:"Desenvolver as franquias",
+    o:"Recuperar a nota dos imóveis abaixo da meta e fazer a franquia errar menos.",
+    e:"Plano por franquia em andamento, franquias treinadas e boas experiências reconhecidas.",
+    val:"Nota acima de 4,80",
+    opp:"Mostrar, por franquia, quantos imóveis saíram de baixo de 4,80 depois do PDI e do treinamento.",
+    p:[
+     {id:"3.1", t:"Identificar os imóveis abaixo da meta", m:"misto", ia:1, ex:"pessoa", who:QUAL,
+      o:"Saber quais imóveis e franquias puxam a nota para baixo.",
+      e:"Lista de imóveis abaixo de 4,80 atualizada a cada 15 dias.",
+      how:["Relatório do Airbnb a cada 15 dias, analisado com o Claude."],
+      tools:["otas","host","claude"]},
+     {id:"3.2", t:"Montar o plano da franquia (PDI)", m:"manual", ia:1, ex:"pessoa", who:QUAL,
+      o:"Saber onde cada franquia está errando e o que ela vai corrigir.",
+      e:"Plano por franquia com os pontos que mais derrubam a nota.",
+      how:["Os temas que mais aparecem nas avaliações de cada franquia viram o plano.","Na alta temporada, vira força-tarefa com monitor de avaliações."],
+      chk:"O PDI das franquias foi pedido pela Ray na reunião de 19/10. Falta definir o formato.",
+      tools:["coment","host","claude"]},
+     {id:"3.3", t:"Treinar as franquias", m:"manual", ia:0, ex:"pessoa", who:QUAL,
+      o:"Ensinar a melhorar a nota, contestar e responder avaliações.",
+      e:"Treinamento quinzenal realizado.",
+      how:["Treinamento no Google Meet com os processos e materiais próprios.","A presença varia de um treinamento para outro, e isso não indica falha."],
+      tools:["meet","materiais"]},
+     {id:"3.4", t:"Reconhecer elogios", m:"manual", ia:0, ex:"pessoa", who:"Qualidade analisa · Rosi publica",
+      o:"Valorizar a franquia que entregou uma boa experiência.",
+      e:"Elogio publicado.",
+      how:["Elogios de várias áreas são analisados.","Os cards voltam para a Rosi, que faz a postagem."],
+      tools:["ocorr"]}
+    ]}
+  ]},
+ {cls:"fin2", k:"Trilha 2", n:"Reclame Aqui",
+  o:"Proteger a reputação da marca: toda reclamação respondida e a nota acompanhada antes de cair.",
+  val:["Reclamação respondida","Reputação da marca protegida"],
+  mps:[
+   {id:"MP4", v:"Proteger", n:"Gerir o Reclame Aqui",
+    o:"Responder toda reclamação e saber com antecedência se a nota da marca corre risco.",
+    e:"Reclamações respondidas e alerta mensal da nota.",
+    val:"Reputação da marca protegida",
+    opp:"Os dados do Reclame Aqui ainda são atualizados à mão para o alerta. Ler direto da página da marca tiraria esse passo.",
+    p:[
+     {id:"4.1", t:"Captar as reclamações", m:"auto", ia:0, ex:"sistema", who:QUAL,
+      o:"Nenhuma reclamação ficar sem dono.",
+      e:"Card no Lovable de comentários para cada reclamação.",
+      how:["O e-mail do Reclame Aqui vira card no Lovable de comentários."],
+      tools:["coment","gmail","ra"]},
+     {id:"4.2", t:"Responder a reclamação", m:"misto", ia:2, ex:"agente", who:QUAL,
+      o:"Responder com o tom da Seazone e dentro do prazo da plataforma.",
+      e:"Reclamação respondida no Reclame Aqui.",
+      how:["A IA redige a resposta.","A publicação é feita à mão no Reclame Aqui."],
+      aud:"Auditoria do texto antes de publicar.",
+      tools:["coment","ra"]},
+     {id:"4.3", t:"Monitorar a nota da marca", m:"misto", ia:0, ex:"sistema", who:QUAL,
+      o:"Saber com antecedência se a nota da Seazone no Reclame Aqui corre risco.",
+      e:"Alerta mensal da nota no Slack.",
+      how:["Script mensal (dia 20) manda o alerta para o Slack.","Os dados do Reclame Aqui são atualizados à mão."],
+      aud:"Auditoria dos dados do Reclame Aqui antes do alerta.",
+      tools:["script","slack","ra"]}
+    ]}
+  ]},
+ {cls:"fin3", k:"Trilha 3", n:"Fiscalização",
+  o:"Transformar toda falha da franquia em ocorrência com prova, tratada com direito de defesa, e cobrar quem reincide.",
+  val:["Falha registrada com prova","Franquia responsabilizada","Franquia melhor"],
+  mps:[
+   {id:"MP5", v:"Tratar", n:"Ocorrências",
+    o:"Captar a falha, dar à franquia o direito de defesa e decidir com critério.",
+    e:"Ocorrência aplicada ou justificada, sem duplicata e no código certo da régua v2.",
+    val:"Falha registrada com prova",
+    opp:"A cobrança da defesa e o encerramento ainda são manuais. Lembrete automático do Segundo Contato e encerramento pelo bot liberariam mais tempo.",
+    p:[
+     {id:"5.1", t:"Receber ocorrências das outras áreas", m:"misto", ia:2, ex:"agente", who:QUAL,
+      o:"Captar as falhas que outras áreas já enxergam.",
+      e:"Ocorrência criada a partir de cada fonte.",
+      how:["Fontes: consultores (gestor regional), realocação e cancelamento, check-in, danos e despesas, CS Proprietários, comentários e implantação.","A Lovable de ocorrências analisa cada caso sozinha."],
+      aud:"Auditoria das análises feitas pela IA.",
+      imp:{d:"recebe", t:"Cards de Implantação (2.2 e 10.9) chegam com o chamado da Central de Atividades e passam pela leitura do Sapron antes de virar ocorrência."},
+      tools:["ocorr","setores","atividades"]},
+     {id:"5.2", t:"Caçar ocorrências nos cards finalizados", m:"auto", ia:2, ex:"agente", who:QUAL,
+      o:"Pegar a falha que a área viu, mas não marcou para virar ocorrência.",
+      e:"Ocorrência criada mesmo quando a área não marcou a caixinha.",
+      how:["O agente lê cada card finalizado nas outras áreas (ex.: suporte de proprietários).","Se pelas regras é ocorrência, ele já cria o card, com ou sem o botão marcado.","O que ele trava ensina o agente da área de origem."],
+      chk:DESENHO,
+      tools:["ocorr","setores","claude"]},
+     {id:"5.3", t:"Triar evidência e duplicatas", m:"misto", ia:1, ex:"sistema", who:QUAL,
+      o:"Só seguir com ocorrência que tem prova, não é repetida e está no código certo.",
+      e:"Card aprovado para tratativa ou descartado.",
+      how:["O sistema sinaliza o card com problema (sem evidência, duplicado ou fora da régua).","A skill de panorama lista a coluna Nova Ocorrência por origem, com evidência, chamado e duplicidade.","Nos cards de Implantação, a skill do Sapron lê o chamado e dá o veredito: abrir, frágil ou não abrir.","Eu aprovo ou descarto card a card."],
+      aud:"Auditoria dos cards sinalizados.",
+      tools:["ocorr","claude"]},
+     {id:"5.4", t:"Notificar a franquia", m:"auto", ia:0, ex:"sistema", who:QUAL,
+      o:"Avisar a franquia com a evidência e o prazo de resposta.",
+      e:"Chamado aberto com prazo de 48 h e card em Primeiro Contato.",
+      how:["A Lovable de ocorrências abre o chamado na Central de Atividades, com as evidências, e move o card."],
+      tools:["ocorr","atividades"]},
+     {id:"5.5", t:"Cobrar a defesa da franquia", m:"manual", ia:0, ex:"pessoa", who:QUAL,
+      o:"Garantir que a franquia responda dentro do prazo.",
+      e:"Defesa recebida ou prazo vencido (Segundo Contato).",
+      how:["Cobrança manual na Central de Atividades."],
+      tools:["atividades"]},
+     {id:"5.6", t:"Julgar a defesa", m:"misto", ia:1, ex:"agente", who:QUAL,
+      o:"Decidir se a justificativa é válida ou se a ocorrência pontua.",
+      e:"Decisão registrada no card.",
+      how:["O bot lê a resposta da franquia no chat da Central de Atividades.","Ele sugere mover o card para Com pontuação ou Justificativa válida.","Eu aprovo ou descarto a sugestão."],
+      aud:"Toda sugestão do bot passa pelo botão aprovar/descartar antes de mover o card.",
+      tools:["atividades","ocorr"]},
+     {id:"5.7", t:"Encerrar e aplicar a ocorrência", m:"manual", ia:0, ex:"pessoa", who:QUAL,
+      o:"Fechar o ciclo e alimentar o acúmulo de pontos.",
+      e:"Ocorrência aplicada e card em Finalizados.",
+      how:["Finalização manual na Lovable de ocorrências."],
+      tools:["atividades","ocorr"]}
+    ]},
+   {id:"MP6", v:"Responsabilizar", n:"Multas",
+    o:"Cobrar a franquia que reincide, com regra clara e prova.",
+    e:"Multa validada, comunicada e descontada, ou cancelada com motivo.",
+    val:"Franquia responsabilizada",
+    opp:"A identificação já é automática; o comunicado e o lançamento do desconto ainda são manuais e são os próximos candidatos.",
+    p:[
+     {id:"6.1", t:"Identificar as multas", m:"auto", ia:0, ex:"sistema", who:QUAL,
+      o:"Saber quem chegou ao limite de pontos.",
+      e:"Multa identificada automaticamente.",
+      how:["Janela de 90 dias, limite por porte da franquia e reincidência."],
+      tools:["multas"]},
+     {id:"6.2", t:"Avisar quem está perto da multa", m:"manual", ia:0, ex:"pessoa", who:QUAL,
+      o:"Dar à franquia a chance de corrigir antes de ser multada.",
+      e:"Aviso de iminência enviado.",
+      how:["O sistema aponta quem está a 4 pontos ou menos do limite.","O aviso só sai depois da minha aprovação."],
+      tools:["multas","slack"]},
+     {id:"6.3", t:"Validar a multa", m:"manual", ia:0, ex:"pessoa", who:"Iara, Carol ou Fernando",
+      o:"Confirmar que a multa é justa antes de cobrar.",
+      e:"Multa aprovada ou revista.",
+      how:["O alerta sai sozinho no #alerta-multas-franquias a cada 15 min, com as marcações.","A validação é feita no Slack."],
+      tools:["slack","multas"]},
+     {id:"6.4", t:"Comunicar a multa à franquia", m:"manual", ia:0, ex:"pessoa", who:QUAL,
+      o:"Formalizar a cobrança com o motivo e as evidências.",
+      e:"Comunicado e chamado enviados.",
+      how:["Comunicado e chamado na Central de Atividades, mais e-mail."],
+      tools:["atividades","gmail"]},
+     {id:"6.5", t:"Descontar ou cancelar a multa", m:"manual", ia:0, ex:"pessoa", who:QUAL,
+      o:"Fechar a multa no financeiro.",
+      e:"Desconto lançado ou cancelamento com motivo.",
+      how:["Desconto lançado à mão na Central de Despesas.","Cancelar exige motivo."],
+      chk:"Confirmar quem lança o desconto na Central de Despesas (Qualidade ou outra área).",
+      tools:["despesas","multas"]}
+    ]},
+   {id:"MP7", v:"Testar", n:"Cliente Oculto",
+    o:"Ver a franquia como o hóspede vê, toda semana, em paralelo às ocorrências.",
+    e:"Pedidos de Cliente Oculto enviados na semana.",
+    val:"Falha registrada com prova",
+    opp:"Cruzar o resultado do Cliente Oculto com as ocorrências da mesma franquia mostra se a fiscalização está enxergando o que o hóspede vê.",
+    p:[
+     {id:"7.1", t:"Montar a lista da semana", m:"misto", ia:0, ex:"sistema", who:QUAL,
+      o:"Escolher as reservas de seazoners que vão testar as franquias.",
+      e:"Lista da semana pronta.",
+      how:["Automação semanal monta a lista a partir do data lake."],
+      aud:"Auditoria da lista antes de enviar os pedidos.",
+      tools:["ocorr","nekt"]},
+     {id:"7.2", t:"Enviar os pedidos de teste", m:"misto", ia:0, ex:"sistema", who:QUAL,
+      o:"Disparar o teste para quem vai se hospedar.",
+      e:"Pedidos enviados na semana.",
+      how:["Os pedidos saem pelo Slack depois da auditoria da lista."],
+      chk:"Confirmar como o resultado do teste volta: vira ocorrência pela 5.1?",
+      tools:["ocorr","slack"]}
+    ]}
+  ]},
+ {cls:"fin4", k:"Trilha 4", n:"Monitoramento de qualidade",
+  o:"O radar da operação: ler o dado, interpretar e avisar antes que o problema apareça. Quase todo automático.",
+  val:["Desvio detectado cedo","Parâmetro ajustado","Operação confiável"],
+  mps:[
+   {id:"MP8", v:"Monitorar", n:"Radar da operação",
+    o:"Mostrar todo dia o volume e toda semana o que ele quer dizer, sem só despejar números.",
+    e:"Boletim diário e radar semanal com a explicação de cada desvio.",
+    val:"Desvio detectado cedo",
+    opp:"Combinar com cada área uma faixa de volume esperado. Sem a faixa, o alerta não sabe o que é normal.",
+    p:[
+     {id:"8.1", t:"Boletim diário de qualidade", m:"auto", ia:0, ex:"sistema", who:QUAL,
+      o:"O grupo de Qualidade e Fiscalização saber o dia sem precisar perguntar.",
+      e:"Mensagem diária no grupo de Qualidade e Fiscalização.",
+      how:["Ocorrências recebidas e aplicadas no dia.","Multas identificadas.","Franquias em iminência de multa."],
+      chk:DESENHO,
+      tools:["ocorr","multas","slack"]},
+     {id:"8.2", t:"Alerta de volume fora da faixa", m:"auto", ia:0, ex:"sistema", who:QUAL,
+      o:"Perceber quando alguma integração quebrou.",
+      e:"Alerta quando o volume de ocorrências sai da faixa esperada.",
+      how:["Cada fonte tem uma faixa (ex.: 15 a 20 ocorrências por dia).","Volume muito abaixo ou muito acima dispara o alerta."],
+      chk:"Em desenho. As faixas de cada fonte ainda não foram definidas.",
+      tools:["ocorr","slack"]},
+     {id:"8.3", t:"Radar semanal (quinta-feira)", m:"misto", ia:2, ex:"agente", who:QUAL,
+      o:"Interpretar a semana e dizer o porquê de cada desvio.",
+      e:"Radar da semana no grupo, com a justificativa de cada ponto.",
+      how:["Áreas que não mandaram ocorrência, e por quê.","Franquias e regiões em que a nota está caindo.","Temas que mais aparecem nas avaliações (ex.: limpeza).","Leitura semanal, porque há processo rotineiro que não é diário."],
+      aud:"Eu reviso a justificativa antes de publicar.",
+      chk:DESENHO,
+      tools:["ocorr","coment","slack","claude"]}
+    ]},
+   {id:"MP9", v:"Evoluir", n:"Evoluir os parâmetros",
+    o:"Manter a régua cobrindo o que a operação faz hoje.",
+    e:"Parâmetro novo ou ajustado sempre que o radar mostra um buraco.",
+    val:"Parâmetro ajustado",
+    opp:"Registrar cada parâmetro novo com a data e a fonte para medir quanto ele passou a captar.",
+    p:[
+     {id:"9.1", t:"Criar parâmetros para falhas de comportamento", m:"manual", ia:1, ex:"pessoa", who:QUAL,
+      o:"Transformar o que é subjetivo em número.",
+      e:"Nova categoria de ocorrência proposta.",
+      how:["Uma rotina mede o comportamento.","A medida vira o parâmetro da ocorrência."],
+      tools:["ocorr","claude"]},
+     {id:"9.2", t:"Varrer mudanças de processo nas áreas", m:"manual", ia:1, ex:"pessoa", who:QUAL,
+      o:"Achar processo que mudou e não está coberto pela régua.",
+      e:"Lista de lacunas da régua.",
+      how:["As áreas nem sempre avisam quando melhoram ou mudam um processo.","Revisão periódica do que mudou em cada área."],
+      tools:["setores","claude"]},
+     {id:"9.3", t:"Ajustar o parâmetro pelo que a caça trava", m:"manual", ia:1, ex:"pessoa", who:QUAL,
+      o:"Corrigir a régua quando o mesmo caso trava sem parâmetro.",
+      e:"Parâmetro ajustado.",
+      how:["Ex.: a caça travou cinco casos de proprietário sem parâmetro → ajustar o parâmetro."],
+      tools:["ocorr","claude"]}
+    ]}
+  ]}
+];
+
+const LANES = [
+  {cls:"ges", lab:"Gestão", groups:[
+    {id:"MP10", n:"Manter o padrão", o:"Regras claras e iguais para todas as franquias.", p:[
+      {id:"10.1", t:"Atualizar a régua de ocorrências e multas", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Manter códigos, pontos e valores coerentes.", e:"Régua publicada e sem contradição.", how:["Mudanças na régua v2 discutidas e aplicadas na Lovable."], tools:["multas","claude"]},
+      {id:"10.2", t:"Definir regras de resposta e contestação", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Padronizar como respondemos e contestamos avaliações.", e:"Regras documentadas.", how:["Regras usadas pela IA nas respostas (1.3 e 4.2) e nas contestações (MP2)."], tools:["coment","claude"]},
+      {id:"10.3", t:"Comunicar as regras às franquias", m:"manual", ia:0, ex:"pessoa", who:QUAL, o:"Nenhuma franquia ser cobrada por regra que não conhecia.", e:"Comunicado registrado.", how:["Comunicados e documentos de mudança."], tools:["slack","materiais"]},
+      {id:"10.4", t:"Auditar a consistência dos julgamentos", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Casos iguais terem a mesma decisão.", e:"Divergências corrigidas.", how:["Revisão periódica de ocorrências e multas com apoio do Claude."], tools:["ocorr","claude"]}
+    ]},
+    {id:"MP11", n:"Medir resultados", o:"Saber se a qualidade está melhorando e onde agir.", p:[
+      {id:"11.1", t:"KPIs de qualidade das franquias", m:"auto", ia:0, ex:"sistema", who:QUAL, o:"Acompanhar ocorrências, pontos e multas por franquia.", e:"Painel atualizado.", how:["Painéis da Lovable de ocorrências e multas."], tools:["multas"]},
+      {id:"11.2", t:"KPIs de comentários", m:"auto", ia:0, ex:"sistema", who:QUAL, o:"Acompanhar nota, volume e tempo de resposta.", e:"Painel atualizado.", how:["Painel do Lovable de comentários."], tools:["coment"]},
+      {id:"11.3", t:"Análises sob demanda", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Responder perguntas pontuais da liderança com dados.", e:"Relatório entregue.", how:["Análises feitas com o Claude sobre o data lake e as Lovables."], tools:["claude","nekt"]}
+    ]},
+    {id:"MP12", n:"Gerir demandas", o:"Toda demanda recebida tem dono, prazo e entrega.", p:[
+      {id:"12.1", t:"Registrar a demanda", m:"manual", ia:0, ex:"pessoa", who:QUAL, o:"Nenhum pedido ficar perdido no Slack ou na conversa.", e:"Tarefa criada com destinatário e prazo.", how:["Pedidos que chegam pelo Slack ou em reunião viram tarefa no Taskdex."], chk:"A Ray perguntou \"registrar demanda de quê?\". Deixar explícito de onde vêm as demandas (liderança, outras áreas, franquias).", tools:["taskdex","slack"]},
+      {id:"12.2", t:"Priorizar", m:"manual", ia:0, ex:"pessoa", who:QUAL, o:"Fazer primeiro o que mais move a nota e o processo.", e:"Fila ordenada.", how:["Priorização da lista de tarefas."], tools:["taskdex"]},
+      {id:"12.3", t:"Executar e entregar", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Entregar a demanda pronta para uso.", e:"Entrega feita e tarefa em Validação.", how:["Execução com apoio do Claude quando cabe."], tools:["taskdex","claude"]},
+      {id:"12.4", t:"Validar e concluir", m:"manual", ia:0, ex:"pessoa", who:"Quem pediu a demanda", o:"Confirmar com quem pediu que a entrega resolve.", e:"Tarefa em Concluído.", how:["Quem pediu valida; a tarefa vai para Concluído."], tools:["taskdex"]}
+    ]}
+  ]},
+  {cls:"sup", lab:"Suporte", groups:[
+    {id:"MP13", n:"Atender as franquias", tag:"Novo", o:"Toda dúvida ou chamado de qualidade respondido no prazo.", p:[
+      {id:"13.1", t:"Responder chamados de qualidade", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Tirar as dúvidas da franquia sobre ocorrências, multas e avaliações.", e:"Chamado respondido.", how:["Chamados e dúvidas pela Central de Atividades e pelo Slack."], chk:"Processo de suporte apontado como faltando pela Ray. Confirmar o escopo.", tools:["atividades","slack"]},
+      {id:"13.2", t:"Fechar chamados parados", m:"manual", ia:0, ex:"pessoa", who:QUAL, o:"Nenhum chamado esperar mais de 5 dias.", e:"Fila sem chamado vencido.", how:["Cobrança da franquia e encerramento do que não vai virar nada."], tools:["atividades"]}
+    ]},
+    {id:"MP14", n:"Manter as ferramentas", o:"Sistemas e integrações funcionando sem interrupção.", p:[
+      {id:"14.1", t:"Manter os sistemas", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Lovables de ocorrências e de comentários no ar e corretas.", e:"Correções e melhorias publicadas.", how:["Ajustes feitos com o Claude e a Lovable."], tools:["ocorr","coment","claude"]},
+      {id:"14.2", t:"Manter as integrações", m:"manual", ia:1, ex:"pessoa", who:QUAL, o:"Dados fluindo entre Nekt, Stays, Sapron, Slack e Apps Script.", e:"Integrações sem falha.", how:["Monitoramento e correção das integrações."], tools:["nekt","stays","atividades","slack","script"]}
+    ]}
+  ]}
+];
+
+const ST = {ar:"No ar", val:"Em validação", des:"Em desenho", dem:"Sob demanda"};
+const AUTOS = [
+  {lab:"Agentes e bots", items:[
+    {id:"A1", n:"Captação diária de comentários", st:"ar", f:"Apps Script · diário",
+     o:"Puxa as reviews do Nekt para a planilha de comentários, que alimenta o Lovable de comentários.", s:["1.1"]},
+    {id:"A2", n:"Reclame Aqui → card", st:"ar", f:"Edge Function · a cada e-mail do RA",
+     o:"Transforma o e-mail do Reclame Aqui em card no Lovable de comentários.", s:["4.1"]},
+    {id:"A3", n:"Classificador de comentários", st:"ar", f:"IA · a cada comentário novo",
+     o:"Dá o problema citado e a gravidade de cada avaliação.", s:["1.2"]},
+    {id:"A4", n:"IA de resposta de avaliações", st:"ar", f:"Lovable de comentários · sob uso",
+     o:"Redige a resposta no tom da Seazone e aprende com as respostas editadas.", s:["1.3","4.2"]},
+    {id:"A5", n:"Triagem do dia", st:"val", f:"IA · todo dia às 13h",
+     o:"Sugere o que vira ocorrência ou manutenção; eu aprovo.", s:["1.4"]},
+    {id:"A6", n:"Botão Manutenção → Sapron", st:"ar", f:"Lovable de comentários · por clique",
+     o:"Abre o chamado na Central de Manutenção do Sapron a partir do comentário.", s:["1.4"]},
+    {id:"A7", n:"Alerta da nota do Reclame Aqui", st:"ar", f:"Apps Script · todo dia 20",
+     o:"Avisa no Slack se a nota da marca corre risco de cair.", s:["4.3"]},
+    {id:"A8", n:"Ocorrências de realocação e cancelamento", st:"ar", f:"Lovable · a cada caso",
+     o:"A IA julga se o problema foi falha da franquia e abre o card de ocorrência.", s:["5.1"]},
+    {id:"A9", n:"Ocorrências de check-in", st:"ar", f:"Lovable · a cada reporte",
+     o:"A IA classifica o reporte de falha de check-in e envia a ocorrência sozinha.", s:["5.1"]},
+    {id:"A10", n:"Caça às ocorrências", st:"des", f:"Agente · a cada card finalizado nas outras áreas",
+     o:"Lê o card finalizado e cria a ocorrência pelas regras, com ou sem a caixinha marcada pela área.", s:["5.2","9.3"]},
+    {id:"A11", n:"Abertura de chamado na Central de Atividades", st:"ar", f:"Lovable de ocorrências · ao aprovar o card",
+     o:"Abre o chamado com as evidências e o prazo de 48 h e move o card para Primeiro Contato.", s:["5.4"]},
+    {id:"A12", n:"Bot do chat do Sapron", st:"ar", f:"Central de Atividades · a cada resposta da franquia",
+     o:"Lê a resposta da franquia no chat e sugere mover o card para Com pontuação ou Justificativa válida.", s:["5.5","5.6"]},
+    {id:"A13", n:"Motor de acúmulo de pontos", st:"ar", f:"Lovable de multas · contínuo",
+     o:"Calcula a janela de 90 dias, o limite por porte e a reincidência e gera a multa.", s:["6.1","6.2"]},
+    {id:"A14", n:"Alerta de multas no Slack", st:"ar", f:"#alerta-multas-franquias · a cada 15 min",
+     o:"Avisa as multas novas com as marcações e o botão de ciência.", s:["6.3"]},
+    {id:"A15", n:"Boletim diário de qualidade", st:"des", f:"Agendado pela Ray · diário",
+     o:"Ocorrências recebidas e aplicadas, multas identificadas e franquias em iminência no grupo de Qualidade e Fiscalização.", s:["8.1"]},
+    {id:"A16", n:"Alerta de volume", st:"des", f:"Agendado pela Ray · diário",
+     o:"Avisa quando o volume de ocorrências de uma fonte sai da faixa esperada.", s:["8.2"]},
+    {id:"A17", n:"Radar semanal", st:"des", f:"Agendado pela Ray · toda quinta",
+     o:"Áreas sem ocorrência, franquias e regiões caindo nota e temas que mais aparecem, cada um com a justificativa.", s:["8.3"]}
+  ]},
+  {lab:"Extensão", items:[
+  ]},
+  {lab:"Skills (rodadas pelo time)", items:[
+    {id:"S1", n:"contestar-airbnb · envio de contestações", st:"ar", f:"Claude Code · rotina diária, até 25 envios por dia",
+     o:"Seleciona as avaliações contestáveis pela régua calibrada, redige no padrão que deu aceite, envia e acompanha o resultado com placar e relatório do dia.", s:["2.1","2.2","2.3"]},
+    {id:"S2", n:"panorama-nova-ocorrencia · novas ocorrências", st:"dem", f:"Claude Code · antes de aprovar a coluna Nova Ocorrência",
+     o:"Mostra os cards ativos em Nova Ocorrência por origem, com franquia, subcategoria, pontos, evidência, chamado e duplicidade, e os pontos de atenção antes de aprovar. Só leitura.", s:["5.1","5.3"]},
+    {id:"S3", n:"analise-sapron-implantacao · cards de Implantação", st:"dem", f:"Claude Code · a cada lote de cards de Implantação",
+     o:"Lê no Sapron o chamado de cada card de Implantação (mensagens, leituras da franquia, SLA, acesso e vistoria) e dá o veredito por card: abrir, frágil ou não abrir. Só leitura.", s:["5.1","5.3"]},
+    {id:"S4", n:"triagem-comentarios-negativos · parecer dos comentários", st:"dem", f:"Claude Code · por período de chegada",
+     o:"Analisa os comentários de nota 0,5 a 3,5 e dá o parecer de ocorrência (com a subcategoria) e de manutenção; depois da minha aprovação, envia pelos botões do Lovable de comentários.", s:["1.4"]}
+  ]},
+  {lab:"Rotinas fixas", items:[
+    {id:"R1", n:"Carga do Cliente Oculto", st:"ar", f:"Semanal",
+     o:"Monta a lista de reservas de seazoners para os testes da semana.", s:["7.1"]},
+    {id:"R2", n:"Relatório quinzenal do Airbnb", st:"ar", f:"A cada 15 dias",
+     o:"Atualiza a lista de imóveis abaixo de 4,80.", s:["3.1"]},
+    {id:"R3", n:"Monitor de avaliações da Task Force", st:"ar", f:"Alta temporada",
+     o:"Acompanha a nota das 30 franquias da força-tarefa contra o marco zero.", s:["3.2"]},
+    {id:"R4", n:"Panorama semanal de Implantação", st:"ar", f:"Toda sexta · pela skill S3",
+     o:"Quantos cards de Implantação entraram, quantos foram aprovados, aplicados, justificados e repetidos na semana, com os motivos.", s:["5.3","8.3"]}
+  ]}
+];
+
+/* ===================== DAQUI PRA BAIXO NÃO MEXER ===================== */
+const autosOf = id => AUTOS.flatMap(g=>g.items).filter(a=>a.s.includes(id));
+const ARROW_DOWN = `<div class="down"><svg viewBox="0 0 10 16" aria-hidden="true"><line x1="5" y1="0" x2="5" y2="10"/><path d="M1 9 L5 16 L9 9 Z"/></svg></div>`;
+const ARROW_RIGHT = `<div class="join"><svg viewBox="0 0 36 14" preserveAspectRatio="none" aria-hidden="true"><line x1="2" y1="7" x2="27" y2="7"/><path d="M26 2 L34 7 L26 12 Z"/></svg></div>`;
+const REG = {};
+const tags = p => `<span class="tags"><span class="mode ${p.m}">${MODE[p.m]}</span><span class="ia i${p.ia}">${IA[p.ia]}</span><span class="ex">${EX[p.ex]}</span>${p.imp?`<span class="imp">${IMP[p.imp.d]}</span>`:""}${p.chk?`<span class="chk">Validar</span>`:""}</span>`;
+function box(p,tr){REG[p.id]={kind:"p",d:p,tr};return `<button class="box" type="button" data-k="${p.id}" aria-expanded="false"><span class="t"><span class="code">${p.id}</span><span>${p.t}</span></span><span class="o">${p.o}</span>${tags(p)}</button>`;}
+function col(mp,tr){REG[mp.id]={kind:"mp",d:mp,tr};return `<div class="col"><button class="head" type="button" data-k="${mp.id}" aria-expanded="false"><span class="v">${mp.id} · ${mp.v}</span><span class="n">${mp.n}</span><span class="o">${mp.o}</span><span class="e"><b>Entrega:</b> ${mp.e}</span></button>${mp.p.map(p=>ARROW_DOWN+box(p,tr)).join("")}</div>`;}
+const valueBox = v => `<div class="value"><b>Valor para a Seazone</b>${v.map((s,i)=>`<span class="${i===v.length-1?'meta':''}">${s}</span>`).join(`<span>↓</span>`)}</div>`;
+const flow = document.getElementById("flow");
+flow.insertAdjacentHTML("afterbegin", TRAILS.map(tr=>{const cols=tr.mps.map(()=>"1fr").join(" 36px ");return `<section class="trail ${tr.cls}"><div class="trail-h"><span class="tk">${tr.k}</span><span class="tn">${tr.n}</span><span class="to">${tr.o}</span></div><div class="main" style="grid-template-columns:${cols} 36px 170px">${tr.mps.map(mp=>col(mp,tr)).join(ARROW_RIGHT)}${ARROW_RIGHT}${valueBox(tr.val)}</div></section>`;}).join(""));
+document.getElementById("base").innerHTML = LANES.map(l=>`<div class="lane ${l.cls}"><span class="lab">${l.lab}</span><div class="row">${l.groups.map(g=>`<div class="grp"><span class="gh"><span class="code">${g.id}</span>${g.n} ${g.tag?`<span class="new">${g.tag}</span>`:''}</span><span class="go">${g.o}</span><div class="chips">${g.p.map(p=>{REG[p.id]={kind:"p",d:p};return `<button class="chip" type="button" data-k="${p.id}" aria-expanded="false"><span class="code">${p.id}</span><span class="nm">${p.t}</span><span class="ia i${p.ia}">${IA[p.ia]}</span>${p.imp?`<span class="imp">${IMP[p.imp.d]}</span>`:""}${p.chk?`<span class="chk">Validar</span>`:""}</button>`}).join("")}</div></div>`).join("")}</div></div>`).join("");
+document.getElementById("autos").innerHTML = AUTOS.map(g=>`<div class="agrp"><span class="lab">${g.lab}</span>${g.items.map(a=>`<div class="acard"><span class="t"><span class="code">${a.id}</span><span>${a.n}</span></span><span class="tags"><span class="st ${a.st}">${ST[a.st]}</span>${a.chk?`<span class="chk" title="${a.chk}">Validar</span>`:""}</span><span class="o">${a.o}${a.chk?` <i>(${a.chk})</i>`:""}</span><span class="f">${a.f}</span><span class="steps">Etapas: ${a.s.map(id=>`<button class="stepb" type="button" data-k="${id}" aria-expanded="false">${id}</button>`).join("")}</span></div>`).join("")}</div>`).join("");
+const main = TRAILS.flatMap(t=>t.mps.flatMap(m=>m.p)), all = main.concat(LANES.flatMap(l=>l.groups.flatMap(g=>g.p)));
+const cnt = (arr,f) => arr.filter(f).length;
+document.getElementById("summary").innerHTML = `<div class="g"><span class="gl">Fluxo principal</span><span class="gv"><span><b>${main.length}</b> processos em ${TRAILS.length} ${TRAILS.length===1?'trilha':'trilhas'}</span><span><b>${all.length-main.length}</b> de gestão e suporte</span></span></div><div class="g"><span class="gl">Execução (fluxo principal)</span><span class="gv">${["auto","misto","manual"].map(k=>`<span><span class="mode ${k}">${MODE[k]}</span> <b>${cnt(main,p=>p.m===k)}</b></span>`).join("")}</span></div><div class="g"><span class="gl">Uso de IA (fluxo principal)</span><span class="gv">${[0,1,2].map(i=>`<span><span class="ia i${i}">${IA[i]}</span> <b>${cnt(main,p=>p.ia===i)}</b></span>`).join("")}</span></div><div class="g"><span class="gl">Quem executa (fluxo principal)</span><span class="gv">${Object.keys(EX).map(k=>`<span><span class="ex">${EX[k]}</span> <b>${cnt(main,p=>p.ex===k)}</b></span>`).join("")}</span></div><div class="g"><span class="gl">Interface com a Implantação</span><span class="gv">${Object.keys(IMP).map(k=>`<span><span class="imp">${IMP[k]}</span> <b>${cnt(all,p=>p.imp&&p.imp.d===k)}</b></span>`).join("")}<span><span class="chk">Validar</span> <b>${cnt(all,p=>p.chk)}</b></span></span></div>`;
+const pop = document.getElementById("pop");
+let cur=null,pinned=false,hideT=null,showT=null;
+const tool = k => { const t=T[k]; return t?.u ? `<a class="tool" href="${t.u}" target="_blank" rel="noopener">${t.n} ↗</a>` : `<span class="tool">${t?.n||k}</span>`; };
+const sec = (l,h,c="") => `<div class="sec ${c}"><span class="sl">${l}</span>${h}</div>`;
+function content(k){const r=REG[k],d=r.d;const head=`<div class="ph"><h3><span class="code">${d.id}</span>${d.t||d.n}</h3><button class="x" type="button" aria-label="Fechar">×</button></div>`;if(r.kind==="mp")return head+sec("Objetivo",`<p>${d.o}</p>`)+sec("Entrega",`<p>${d.e}</p>`)+sec("Valor para a Seazone",`<p>Contribui para: <b>${d.val}</b> (${r.tr.val.join(" → ")}).</p>`)+sec("Como entregar mais valor",`<p>${d.opp}</p><p style="font-size:12px;color:var(--ink3)">Sugestão para validar com a liderança.</p>`,"opp");return head+tags(d)+sec("Responsável",`<p>${d.who}</p>`)+sec("Objetivo",`<p>${d.o}</p>`)+sec("Entrega",`<p>${d.e}</p>`)+sec("Como funciona", d.how.length>1?`<ul>${d.how.map(h=>`<li>${h}</li>`).join("")}</ul>`:`<p>${d.how[0]}</p>`)+(d.aud?sec("Auditoria",`<p>${d.aud}</p>`,"aud"):"")+(d.imp?sec(d.imp.d==="recebe"?"Interface: recebemos da Implantação":"Interface: entregamos para a Implantação",`<p>${d.imp.t}</p>`,"impb"):"")+(d.chk?sec("A validar",`<p>${d.chk}</p>`,"chkb"):"")+(autosOf(d.id).length?sec("Agentes e rotinas",`<ul>${autosOf(d.id).map(a=>`<li><b>${a.id}</b> ${a.n} (${ST[a.st].toLowerCase()})</li>`).join("")}</ul>`):"")+sec("Ferramentas",`<div class="tools">${d.tools.map(tool).join("")}</div>`);}
+function place(el){const b=el.getBoundingClientRect(),pw=pop.offsetWidth,ph=pop.offsetHeight,vw=innerWidth,vh=innerHeight;let x,y=b.top;if(b.right+10+pw<=vw-12)x=b.right+10;else if(b.left-pw-10>=12)x=b.left-pw-10;else{x=Math.max(12,Math.min(b.left,vw-pw-12));y=b.bottom+8;}if(y+ph>vh-12)y=Math.max(12,vh-ph-12);pop.style.left=x+"px";pop.style.top=y+"px";}
+function open(el,pin){clearTimeout(hideT);if(cur&&cur!==el)cur.setAttribute("aria-expanded","false");cur=el;pinned=pin;el.setAttribute("aria-expanded","true");pop.innerHTML=content(el.dataset.k);pop.hidden=false;place(el);pop.querySelector(".x").onclick=close;}
+function close(){pop.hidden=true;pinned=false;if(cur){cur.setAttribute("aria-expanded","false");cur=null;}}
+document.querySelectorAll("[data-k]").forEach(el=>{el.addEventListener("mouseenter",()=>{if(pinned)return;clearTimeout(showT);showT=setTimeout(()=>open(el,false),120);});el.addEventListener("mouseleave",()=>{clearTimeout(showT);if(!pinned)hideT=setTimeout(close,180);});el.addEventListener("click",e=>{e.stopPropagation();(cur===el&&pinned)?close():open(el,true);});});
+pop.addEventListener("mouseenter",()=>clearTimeout(hideT));
+pop.addEventListener("mouseleave",()=>{if(!pinned)hideT=setTimeout(close,180);});
+pop.addEventListener("click",e=>e.stopPropagation());
+document.addEventListener("click",()=>{if(!pop.hidden)close();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!pop.hidden){const c=cur;close();c&&c.focus();}});
+addEventListener("resize",()=>{if(cur&&!pop.hidden)place(cur);});
+document.querySelector(".scroll").addEventListener("scroll",()=>{if(cur&&!pop.hidden)place(cur);});
+addEventListener("scroll",()=>{if(cur&&!pop.hidden)place(cur);},{passive:true});
+
+/* abas */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    if(!pop.hidden)close();
+    document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected","false"));
+    document.querySelectorAll(".tabpanel").forEach(x=>x.hidden=true);
+    t.setAttribute("aria-selected","true");
+    document.getElementById("t-"+t.dataset.tab).hidden=false;
+  });
+});
+</script>
+</body>
+</html>
