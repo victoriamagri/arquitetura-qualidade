@@ -174,7 +174,7 @@ a.tool:hover,a.tool:focus-visible{background:var(--bluebg);outline:none}
 .acard .o{font:400 12px/1.4 var(--serif);color:var(--ink2)}
 .acard .f{font-size:11.5px;color:var(--ink3)}
 .st{font:700 10px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;padding:4px 6px;border-radius:4px;white-space:nowrap}
-.st.ar{color:var(--green);background:var(--greenbg)} .st.val{color:var(--amber);background:var(--amberbg)} .st.des{color:var(--ink2);background:var(--soft)} .st.dem{color:var(--blue);background:var(--bluebg)}
+.st.ar{color:var(--green);background:var(--greenbg)} .st.val{color:var(--amber);background:var(--amberbg)} .st.des{color:var(--ink2);background:var(--soft)} .st.dem{color:var(--blue);background:var(--bluebg)} .st.sub{color:var(--ink3);background:var(--soft);text-decoration:line-through}
 .steps{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11.5px;color:var(--ink3)}
 .stepb{font:700 11px/1 var(--mono);color:var(--blue);background:var(--paper);border:1px solid var(--blue);border-radius:4px;padding:3px 5px;cursor:pointer}
 .stepb:hover,.stepb:focus-visible,.stepb[aria-expanded="true"]{outline:2px solid var(--coral);outline-offset:1px}
@@ -423,9 +423,7 @@ const TRAILS = [
      {id:"1.4", t:"Encaminhar o que exige ação", m:"auto", ia:2, ex:"agente", who:QUAL,
       o:"Garantir que nenhum problema citado pelo hóspede fique sem dono.",
       e:"Chamado de manutenção ou ocorrência aberto.",
-      how:["Manutenção → Central de Manutenção do Sapron.","Falha da franquia → ocorrência (5.1).","Caso crítico → UTI, que é do Administrativo e Financeiro.","Comentários negativos: o agente de triagem (A19) dá o parecer de segunda a sexta, às 14h, e eu aprovo o envio."],
-      chk:"A triagem do dia (A5) ainda está em validação.",
-      tools:["coment","manutencao"]}
+      how:["Manutenção → Central de Manutenção do Sapron.","Falha da franquia → ocorrência (5.1).","Caso crítico → UTI, que é do Administrativo e Financeiro.","Comentários negativos: o agente de triagem (A19) dá o parecer de segunda a sexta, às 14h, e eu aprovo o envio."],      tools:["coment","manutencao"]}
     ]},
    {id:"MP2", v:"Defender a nota", n:"Contestações · defesa de nota",
     o:"Tirar do ar a avaliação que fere as regras da plataforma.",
@@ -802,7 +800,7 @@ const OWN = {
   R9:["Victoria","Apps Script \"reclame aqui\""], R10:["Victoria","GitHub victoriamagri/vitrine-seazone"],
   R11:["Victoria","GitHub victoriamagri/monitor-envio-massa"], R12:["Victoria","Artifact Monitor de KPIs da Operação (coletar.py)"]
 };
-const ST = {ar:"No ar", val:"Em validação", des:"Em desenho", dem:"Sob demanda"};
+const ST = {ar:"No ar", val:"Em validação", des:"Em desenho", dem:"Sob demanda", sub:"Substituída"};
 const AUTOS = [
   {lab:"Agentes e bots", items:[
     {id:"A1", n:"Captação diária de comentários", st:"ar", f:"Apps Script · diário",
@@ -813,8 +811,8 @@ const AUTOS = [
      o:"Dá o problema citado e a gravidade de cada avaliação.", s:["1.2"]},
     {id:"A4", n:"IA de resposta de avaliações", st:"ar", f:"Lovable de comentários · sob uso",
      o:"Redige a resposta no tom da Seazone e aprende com as respostas editadas.", s:["1.3","4.1"]},
-    {id:"A5", n:"Triagem do dia", st:"val", f:"IA · todo dia às 13h",
-     o:"Sugere o que vira ocorrência ou manutenção; eu aprovo.", s:["1.4"]},
+    {id:"A5", n:"Triagem do dia", st:"sub", f:"IA no Lovable de comentários · todo dia às 13h (parada)",
+     o:"Sugeria o que vira ocorrência ou manutenção para eu aprovar. Substituída em 12/11 pelo A19, o agente de triagem dos comentários negativos.", s:["1.4"]},
     {id:"A6", n:"Botão Manutenção → Sapron", st:"ar", f:"Lovable de comentários · por clique",
      o:"Abre o chamado na Central de Manutenção do Sapron a partir do comentário.", s:["1.4"]},
     {id:"A7", n:"Alerta da nota do Reclame Aqui", st:"ar", f:"Apps Script · todo dia 20",
