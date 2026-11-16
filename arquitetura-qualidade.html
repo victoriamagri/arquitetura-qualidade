@@ -238,7 +238,7 @@ a.tool:hover,a.tool:focus-visible{background:var(--bluebg);outline:none}
  <div class="hero-inner">
   <div class="masthead">
    <div class="wordmark"><span class="sz-logo" role="img" aria-label="Seazone">sea<span class="sz-house"><svg viewBox="0 0 564 575" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"><path d="M543.226 178.172L442.93 119.392C443.194 117.952 443.72 116.643 443.72 115.203V26.5752C443.72 11.913 431.743 0 417.001 0H363.562C348.821 0 336.843 11.913 336.843 26.5752V57.6015L300.516 36.3936C285.774 27.6225 266.294 29.0626 252.605 39.1428C252.342 39.2737 252.079 39.2737 251.947 39.4046L20.951 172.543C1.73419 183.932 -6.29474 210.507 5.55122 230.406C17.9237 251.09 45.301 256.588 64.5178 245.199L78.3381 237.213C62.017 269.025 51.7505 305.026 51.7505 344.169C51.7505 406.221 75.7056 467.226 119.799 511.344C137.173 528.624 157.443 543.156 179.555 553.759C196.666 562.007 214.567 568.814 233.257 572.218C258.002 576.669 283.8 574.444 308.808 574.444C335.922 574.444 363.036 574.444 390.018 574.444C414.5 574.444 439.113 574.575 463.99 574.575C470.176 574.575 476.231 573.004 481.759 570.254C488.866 566.72 492.947 562.792 497.685 556.509C502.95 549.57 506.635 541.061 506.635 532.159V252.923C525.062 259.599 547.306 253.839 558.363 235.511C570.34 215.613 562.311 189.038 542.963 177.648L543.226 178.172ZM427.794 348.751C427.794 433.582 370.012 502.573 282.878 502.573C195.745 502.573 131.777 429.131 131.777 344.3C131.777 259.468 195.745 188.776 282.878 188.776C370.012 188.776 427.794 254.232 427.794 338.147V348.751Z" fill="#EB615E"/></svg></span>zone</span><span>· Franquias · Qualidade</span></div>
-   <span class="mast-date">Rascunho v8 · 12/11/2026</span>
+   <span class="mast-date">Rascunho v8 · 16/11/2026</span>
   </div>
   <span class="eyebrow">Arquitetura de processos</span>
   <h1>Qualidade</h1>
@@ -436,18 +436,18 @@ const TRAILS = [
      {id:"2.1", t:"Selecionar as avaliações contestáveis", m:"auto", ia:2, ex:"agente", who:QUAL,
       o:"Achar entre as avaliações novas as que a plataforma costuma aceitar contestar.",
       e:"Fila do dia separada por faixa de risco.",
-      how:["A skill puxa as avaliações novas do Airbnb abaixo de 5.","A IA classifica pela régua calibrada: sem letras, não se hospedou, sem conteúdo."],
+      how:["O agente da rotina (A20) roda todo dia às 9h ou quando o computador liga; se ficou desligado, a rodada seguinte pega o acumulado.","A skill puxa as avaliações novas do Airbnb abaixo de 5.","A IA classifica pela régua calibrada: sem letras, não se hospedou, sem conteúdo."],
       tools:["airbnb","nekt","claude"]},
      {id:"2.2", t:"Redigir e enviar a contestação", m:"misto", ia:2, ex:"agente", who:QUAL,
       o:"Enviar o pedido no padrão que já deu aceite.",
       e:"Contestações do dia enviadas, até 25.",
-      how:["A IA redige no modelo de texto que deu aceite.","O envio respeita o teto diário e o intervalo entre pedidos."],
+      how:["A IA redige no modelo de texto que deu aceite.","O terminal abre com o lote do dia e o envio pelo Chrome só começa depois do meu “manda”.","O envio respeita o teto diário e o intervalo entre pedidos."],
       aud:"Faixa nova ou item de risco alto só vai com o meu ok.",
       tools:["airbnb","claude"]},
      {id:"2.3", t:"Acompanhar o resultado", m:"auto", ia:2, ex:"agente", who:QUAL,
       o:"Saber o que foi aceito e calibrar a régua.",
       e:"Placar por faixa e relatório do dia.",
-      how:["A skill lê a resposta de cada pedido aberto.","O placar e o relatório do dia são atualizados sozinhos."],
+      how:["A skill lê a resposta de cada pedido aberto.","O placar e o relatório do dia são atualizados sozinhos às 21h30; as noites perdidas são fechadas na abertura seguinte."],
       tools:["airbnb","coment"]}
     ]},
    {id:"MP3", v:"Desenvolver", n:"Desenvolver as franquias",
@@ -794,6 +794,7 @@ const OWN = {
   A13:["Victoria",LOV_O], A14:["Victoria",LOV_O], A15:["Victoria · agenda: Ray","a definir"], A16:["Victoria · agenda: Ray","a definir"],
   A17:["Victoria · agenda: Ray","a definir"], A18:["Victoria","a definir"],
   A19:["Victoria","agente triagem-comentarios-negativos (seazone/comentarios/.claude/agents) + Agendador do Windows \"Claude Triagem Comentarios\" (máquina da Victoria)"],
+  A20:["Victoria","skill contestar-airbnb (rotina/contestar.ps1) + Agendador do Windows \"contestar-airbnb-manha\" e \"contestar-airbnb-noite\", pasta Seazone (máquina da Victoria)"],
   S1:["Bill (skill) · Qualidade executa","skill contestar-airbnb"], S2:["Victoria",SK("panorama-nova-ocorrencia")], S3:["Victoria",SK("analise-sapron-implantacao")],
   S4:["Victoria",SK("triagem-comentarios-negativos")], S5:["Victoria",SK("kpi-qualidade")], S6:["Victoria",SK("kpi-comentario")],
   R1:["Victoria","a confirmar"], R2:["Victoria","a confirmar"], R3:["Victoria","GitHub victoriamagri/monitor-avaliacoes"], R4:["Victoria",SK("analise-sapron-implantacao")],
@@ -845,7 +846,11 @@ const AUTOS = [
     {id:"A19", n:"Agente de triagem dos comentários negativos", st:"ar", f:"Agente · segunda a sexta às 14h",
      o:"Analisa os comentários de nota 0,5 a 3,5 que chegaram no dia (na segunda, também os de sábado e domingo) e dá o parecer de ocorrência, com a subcategoria, e de manutenção. Ao terminar, abre o terminal com o parecer e envia pelos botões do Lovable de comentários só depois da minha aprovação.",
      v:"Nenhum comentário negativo fica sem análise no dia em que chega, sem depender de eu lembrar de rodar a skill. Eu só aprovo.",
-     s:["1.4"]}
+     s:["1.4"]},
+    {id:"A20", n:"Agente da rotina de contestações do Airbnb", st:"ar", f:"Agente · todo dia às 9h ou quando o computador liga",
+     o:"Puxa as avaliações novas do Airbnb abaixo de 5, classifica pela régua calibrada e monta o lote do dia, até 25. Se o computador ficou desligado, acumula: a rodada seguinte pega tudo o que chegou e fecha os relatórios das noites perdidas. Ao terminar, abre o terminal mostrando o que acumulou, o lote e o que pede o meu ok, e envia pelo Chrome só depois da minha aprovação. Às 21h30 fecha o dia com placar e relatório.",
+     v:"Nenhuma avaliação contestável fica para trás por falta de rodada: até 16/11 a skill rodava à mão e pulou de 13 a 15/11. Eu só aprovo o envio.",
+     s:["2.1","2.2","2.3"]}
   ]},
   {lab:"Extensão", items:[
   ]},
