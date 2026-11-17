@@ -238,7 +238,7 @@ a.tool:hover,a.tool:focus-visible{background:var(--bluebg);outline:none}
  <div class="hero-inner">
   <div class="masthead">
    <div class="wordmark"><span class="sz-logo" role="img" aria-label="Seazone">sea<span class="sz-house"><svg viewBox="0 0 564 575" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"><path d="M543.226 178.172L442.93 119.392C443.194 117.952 443.72 116.643 443.72 115.203V26.5752C443.72 11.913 431.743 0 417.001 0H363.562C348.821 0 336.843 11.913 336.843 26.5752V57.6015L300.516 36.3936C285.774 27.6225 266.294 29.0626 252.605 39.1428C252.342 39.2737 252.079 39.2737 251.947 39.4046L20.951 172.543C1.73419 183.932 -6.29474 210.507 5.55122 230.406C17.9237 251.09 45.301 256.588 64.5178 245.199L78.3381 237.213C62.017 269.025 51.7505 305.026 51.7505 344.169C51.7505 406.221 75.7056 467.226 119.799 511.344C137.173 528.624 157.443 543.156 179.555 553.759C196.666 562.007 214.567 568.814 233.257 572.218C258.002 576.669 283.8 574.444 308.808 574.444C335.922 574.444 363.036 574.444 390.018 574.444C414.5 574.444 439.113 574.575 463.99 574.575C470.176 574.575 476.231 573.004 481.759 570.254C488.866 566.72 492.947 562.792 497.685 556.509C502.95 549.57 506.635 541.061 506.635 532.159V252.923C525.062 259.599 547.306 253.839 558.363 235.511C570.34 215.613 562.311 189.038 542.963 177.648L543.226 178.172ZM427.794 348.751C427.794 433.582 370.012 502.573 282.878 502.573C195.745 502.573 131.777 429.131 131.777 344.3C131.777 259.468 195.745 188.776 282.878 188.776C370.012 188.776 427.794 254.232 427.794 338.147V348.751Z" fill="#EB615E"/></svg></span>zone</span><span>· Franquias · Qualidade</span></div>
-   <span class="mast-date">Rascunho v8 · 16/11/2026</span>
+   <span class="mast-date">Rascunho v8 · 17/11/2026</span>
   </div>
   <span class="eyebrow">Arquitetura de processos</span>
   <h1>Qualidade</h1>
@@ -793,14 +793,19 @@ const OWN = {
   A8:["Victoria",LOV_O], A9:["Victoria",LOV_O], A10:["Victoria","a definir"], A11:["Victoria",LOV_O], A12:["Victoria",LOV_O],
   A13:["Victoria",LOV_O], A14:["Victoria",LOV_O], A15:["Victoria · agenda: Ray","a definir"], A16:["Victoria · agenda: Ray","a definir"],
   A17:["Victoria · agenda: Ray","a definir"], A18:["Victoria","a definir"],
-  A19:["Victoria","agente triagem-comentarios-negativos (seazone/comentarios/.claude/agents) + Agendador do Windows \"Claude Triagem Comentarios\" (máquina da Victoria)"],
-  A20:["Victoria","skill contestar-airbnb (rotina/contestar.ps1) + Agendador do Windows \"contestar-airbnb-manha\" e \"contestar-airbnb-noite\", pasta Seazone (máquina da Victoria)"],
+  A19:["Victoria","agente triagem-comentarios-negativos (seazone/comentarios/.claude/agents) + Agendador do Windows \"Claude Triagem Comentarios\" (máquina da Victoria) · migração para a VPS do time aguardando o Lovable e a conta do Claude da VPS"],
+  A20:["Victoria","skill contestar-airbnb (rotina/contestar.ps1) + Agendador do Windows \"contestar-airbnb-manha\" e \"contestar-airbnb-noite\", pasta Seazone (máquina da Victoria) · seleção vai para a VPS do time; envio fica no notebook (a VPS não tem navegador)"],
+  A21:["Victoria","skill panorama-nova-ocorrencia + workflows analise-sapron-implantacao e analise-sapron-manutencao + Agendador do Windows \"Claude Panorama Nova Ocorrencia\" (máquina da Victoria) · na VPS do time vai entregar por DM da Navi; aguarda o Lovable e a conta do Claude da VPS"],
+  A22:["Victoria","skill responder-airbnb + rotina ~/rotinas/responder-airbnb na VPS do time (lote e textos) · publicação pelo Chrome no notebook da Victoria"],
+  A23:["Victoria","rotina ~/rotinas/navi na VPS do time (app Navi no Slack) · hoje ainda roda pelo Agendador do Windows"],
+  A24:["Victoria","rotina ~/rotinas/elogios-franquias na VPS do time (crontab, 10h30)"],
   S1:["Bill (skill) · Qualidade executa","skill contestar-airbnb"], S2:["Victoria",SK("panorama-nova-ocorrencia")], S3:["Victoria",SK("analise-sapron-implantacao")],
+  S7:["Victoria",SK("cobrar-sapron")], S8:["Victoria",SK("respostas-sapron")], S9:["Victoria",SK("responder-airbnb")],
   S4:["Victoria",SK("triagem-comentarios-negativos")], S5:["Victoria",SK("kpi-qualidade")], S6:["Victoria",SK("kpi-comentario")],
   R1:["Victoria","a confirmar"], R2:["Victoria","a confirmar"], R3:["Victoria","GitHub victoriamagri/monitor-avaliacoes"], R4:["Victoria",SK("analise-sapron-implantacao")],
   R5:["Victoria",SK("kpi-qualidade")+" e kpi-comentario"], R6:["Victoria","GitHub victoriamagri/termometro-qualidade"], R7:["Victoria","—"], R8:["Victoria","—"],
   R9:["Victoria","Apps Script \"reclame aqui\""], R10:["Victoria","GitHub victoriamagri/vitrine-seazone"],
-  R11:["Victoria","GitHub victoriamagri/monitor-envio-massa"], R12:["Victoria","Artifact Monitor de KPIs da Operação (coletar.py)"]
+  R11:["Victoria","GitHub victoriamagri/monitor-envio-massa · rotina ~/rotinas/monitor-envio-massa na VPS do time"], R13:["Victoria","GitHub victoriamagri/monitor-premium-avaliacoes · rotina ~/rotinas/monitor-premium na VPS do time"], R12:["Victoria","Artifact Monitor de KPIs da Operação (coletar.py)"]
 };
 const ST = {ar:"No ar", val:"Em validação", des:"Em desenho", dem:"Sob demanda", sub:"Substituída"};
 const AUTOS = [
@@ -850,7 +855,23 @@ const AUTOS = [
     {id:"A20", n:"Agente da rotina de contestações do Airbnb", st:"ar", f:"Agente · todo dia às 9h ou quando o computador liga",
      o:"Puxa as avaliações novas do Airbnb abaixo de 5, classifica pela régua calibrada e monta o lote do dia, até 25. Se o computador ficou desligado, acumula: a rodada seguinte pega tudo o que chegou e fecha os relatórios das noites perdidas. Ao terminar, abre o terminal mostrando o que acumulou, o lote e o que pede o meu ok, e envia pelo Chrome só depois da minha aprovação. Às 21h30 fecha o dia com placar e relatório.",
      v:"Nenhuma avaliação contestável fica para trás por falta de rodada: até 16/11 a skill rodava à mão e pulou de 13 a 15/11. Eu só aprovo o envio.",
-     s:["2.1","2.2","2.3"]}
+     s:["2.1","2.2","2.3"]},
+    {id:"A21", n:"Agente do panorama de Nova Ocorrência", st:"ar", f:"Agente · segunda a sexta às 16h",
+     o:"Mostra os cards ativos em Nova Ocorrência por origem, com evidência, duplicidade e pontos de atenção, e em seguida confere no Sapron os cards de Implantação e de Manutenção, com veredito por card. Só leitura.",
+     v:"A coluna Nova Ocorrência chega conferida antes de eu aprovar, sem depender de eu rodar a skill.",
+     s:["5.1","5.3"]},
+    {id:"A22", n:"Agente de respostas às avaliações positivas do Airbnb", st:"ar", f:"Agente · segunda a sexta às 9h",
+     o:"Puxa da Stays as avaliações nota 4 e 5 ainda dentro da janela de 13 dias, monta o lote das 50 que vencem primeiro, redige as respostas e separa as que citam problema no imóvel para a manutenção. A publicação é pelo Chrome, só depois da minha aprovação.",
+     v:"As avaliações positivas são respondidas antes de vencer o prazo, e os problemas citados nelas chegam à manutenção.",
+     s:["1.3"]},
+    {id:"A23", n:"Navi · resumo das minhas pendências", st:"ar", f:"Agente · todo dia às 15h e panorama semanal na sexta às 16h",
+     o:"Junta o que tenho pendente para responder no Slack, no Suporte Unificado e no Taskdex, e os alertas do dia (SLA vencido, KPIs não lançados, notas caindo, Nova Ocorrência parada, rotinas atrasadas), e manda numa DM no Slack. Só leitura.",
+     v:"Nenhum pedido, chamado ou rotina fica esquecido, e os KPIs não lançados aparecem no mesmo dia.",
+     s:["11.1","11.2","13.1"]},
+    {id:"A24", n:"Agente de elogios às franquias", st:"ar", f:"Agente · 1ª e 3ª quarta do mês",
+     o:"Escolhe as franquias com mais de 20 avaliações, média acima de 4,90 e nenhuma avaliação negativa nos checkouts dos 3 meses anteriores, escreve o elogio de cada uma e envia para Novos Elogios, onde eu valido.",
+     v:"As franquias que entregam boa experiência são reconhecidas com regra fixa, sem depender de garimpo manual.",
+     s:["3.3"]}
   ]},
   {lab:"Extensão", items:[
   ]},
@@ -866,7 +887,13 @@ const AUTOS = [
     {id:"S5", n:"kpi-qualidade · KPIs de Qualidade e Fiscalização", st:"ar", f:"Claude Code · todo dia, depois dos processos do dia",
      o:"Calcula os 15 KPIs do dia do setor 10 (os 12 do painel de ocorrências e as 3 notas de avaliação) e lança no kpi-system depois do meu ok.", s:["11.1"]},
     {id:"S6", n:"kpi-comentario · KPIs de Comentários e suportes", st:"ar", f:"Claude Code · todo dia",
-     o:"Lança no setor 15 os KPIs de comentários, os suportes que abri no Suporte Unificado e as contestações do dia.", s:["11.2"]}
+     o:"Lança no setor 15 os KPIs de comentários, os suportes que abri no Suporte Unificado e as contestações do dia.", s:["11.2"]},
+    {id:"S7", n:"cobrar-sapron · cobrança das franquias atrasadas", st:"dem", f:"Claude Code · quando há chamados com prazo vencido",
+     o:"Lista os chamados de ocorrência em que a franquia passou do prazo sem responder e, depois do meu ok, envia a cobrança de 24 horas pela API da Central de Atividades.", s:["5.5"]},
+    {id:"S8", n:"respostas-sapron · parecer das defesas", st:"dem", f:"Claude Code · sobre os chamados em andamento",
+     o:"Lê os chamados de ocorrência em andamento e dá o parecer de cada defesa (justificativa válida, aviso formal ou pedido de evidência); envia e resolve só o que eu aprovar.", s:["5.6","5.7"]},
+    {id:"S9", n:"responder-airbnb · respostas às avaliações positivas", st:"ar", f:"Claude Code · usada pelo agente A22",
+     o:"Puxa da Stays as avaliações nota 4 e 5 na janela de resposta, redige no padrão e publica pelo Chrome depois do meu ok.", s:["1.3"]}
   ]},
   {lab:"Rotinas fixas", items:[
     {id:"R1", n:"Carga do Cliente Oculto", st:"ar", f:"Semanal",
@@ -875,7 +902,7 @@ const AUTOS = [
      o:"Atualiza a lista de imóveis abaixo de 4,80.", s:["3.1"]},
     {id:"R3", n:"Monitor de avaliações da Task Force", st:"ar", f:"Alta temporada",
      o:"Acompanha a nota das 30 franquias da força-tarefa contra o marco zero.", s:["3.1"]},
-    {id:"R4", n:"Panorama semanal de Implantação", st:"ar", f:"Toda sexta · pela skill S3",
+    {id:"R4", n:"Panorama semanal de Implantação", st:"dem", f:"Sob pedido · pela skill S3 (saiu do agendamento em 17/11)",
      o:"Quantos cards de Implantação entraram, quantos foram aprovados, aplicados, justificados e repetidos na semana, com os motivos.", s:["5.3","8.3"]},
     {id:"R5", n:"Lançamento dos KPIs do dia", st:"ar", f:"Todo dia útil · pelas skills S5 e S6",
      o:"Fotografa os KPIs dos setores 10 e 15 no próprio dia. Dia passado não é recalculado.", s:["11.1","11.2"]},
@@ -889,10 +916,12 @@ const AUTOS = [
      o:"Ler o alerta, ver na simulação quantas avaliações positivas faltam para subir 0,1, revisar as contestações e fechar o plano do mês.", s:["4.2"]},
     {id:"R10", n:"Retorno da página do Reclame Aqui", st:"des", f:"Mensal · 1º dia útil",
      o:"Curadoria da vitrine e medição de visitas, cliques, reservas e contatos de investidor vindos da página.", s:["4.3"]},
-    {id:"R11", n:"Monitor de Envio em Massa", st:"ar", f:"Todo dia às 14h · agendador do Windows",
+    {id:"R11", n:"Monitor de Envio em Massa", st:"ar", f:"Todo dia às 14h · VPS do time",
      o:"Mostra se as franquias estão usando as mensagens em massa do Seazone Host (pedido de avaliação).", s:["3.1","8.3"]},
     {id:"R12", n:"Monitor de KPIs da Operação", st:"ar", f:"Sob pedido · foto do kpi-system",
-     o:"Mostra os KPIs dos setores 10 e 15 lançados pelas skills, dia a dia contra a meta, e os KPIs parados.", s:["11.1","11.2"]}
+     o:"Mostra os KPIs dos setores 10 e 15 lançados pelas skills, dia a dia contra a meta, e os KPIs parados.", s:["11.1","11.2"]},
+    {id:"R13", n:"Monitor das Franquias Premium", st:"ar", f:"Todo dia às 10h · VPS do time",
+     o:"Publica a nota das franquias Premium contra o restante da Seazone, os alertas do dia e a página de detratores por franquia.", s:["3.1"]}
   ]}
 ];
 
