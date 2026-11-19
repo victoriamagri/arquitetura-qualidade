@@ -238,7 +238,7 @@ a.tool:hover,a.tool:focus-visible{background:var(--bluebg);outline:none}
  <div class="hero-inner">
   <div class="masthead">
    <div class="wordmark"><span class="sz-logo" role="img" aria-label="Seazone">sea<span class="sz-house"><svg viewBox="0 0 564 575" xmlns="http://www.w3.org/2000/svg" fill="none" aria-hidden="true"><path d="M543.226 178.172L442.93 119.392C443.194 117.952 443.72 116.643 443.72 115.203V26.5752C443.72 11.913 431.743 0 417.001 0H363.562C348.821 0 336.843 11.913 336.843 26.5752V57.6015L300.516 36.3936C285.774 27.6225 266.294 29.0626 252.605 39.1428C252.342 39.2737 252.079 39.2737 251.947 39.4046L20.951 172.543C1.73419 183.932 -6.29474 210.507 5.55122 230.406C17.9237 251.09 45.301 256.588 64.5178 245.199L78.3381 237.213C62.017 269.025 51.7505 305.026 51.7505 344.169C51.7505 406.221 75.7056 467.226 119.799 511.344C137.173 528.624 157.443 543.156 179.555 553.759C196.666 562.007 214.567 568.814 233.257 572.218C258.002 576.669 283.8 574.444 308.808 574.444C335.922 574.444 363.036 574.444 390.018 574.444C414.5 574.444 439.113 574.575 463.99 574.575C470.176 574.575 476.231 573.004 481.759 570.254C488.866 566.72 492.947 562.792 497.685 556.509C502.95 549.57 506.635 541.061 506.635 532.159V252.923C525.062 259.599 547.306 253.839 558.363 235.511C570.34 215.613 562.311 189.038 542.963 177.648L543.226 178.172ZM427.794 348.751C427.794 433.582 370.012 502.573 282.878 502.573C195.745 502.573 131.777 429.131 131.777 344.3C131.777 259.468 195.745 188.776 282.878 188.776C370.012 188.776 427.794 254.232 427.794 338.147V348.751Z" fill="#EB615E"/></svg></span>zone</span><span>· Franquias · Qualidade</span></div>
-   <span class="mast-date">Rascunho v8 · 17/11/2026</span>
+   <span class="mast-date">Rascunho v8 · 19/11/2026</span>
   </div>
   <span class="eyebrow">Arquitetura de processos</span>
   <h1>Qualidade</h1>
@@ -793,11 +793,11 @@ const OWN = {
   A8:["Victoria",LOV_O], A9:["Victoria",LOV_O], A10:["Victoria","a definir"], A11:["Victoria",LOV_O], A12:["Victoria",LOV_O],
   A13:["Victoria",LOV_O], A14:["Victoria",LOV_O], A15:["Victoria · agenda: Ray","a definir"], A16:["Victoria · agenda: Ray","a definir"],
   A17:["Victoria · agenda: Ray","a definir"], A18:["Victoria","a definir"],
-  A19:["Victoria","agente triagem-comentarios-negativos (seazone/comentarios/.claude/agents) + Agendador do Windows \"Claude Triagem Comentarios\" (máquina da Victoria) · migração para a VPS do time aguardando o Lovable e a conta do Claude da VPS"],
-  A20:["Victoria","skill contestar-airbnb (rotina/contestar.ps1) + Agendador do Windows \"contestar-airbnb-manha\" e \"contestar-airbnb-noite\", pasta Seazone (máquina da Victoria) · seleção vai para a VPS do time; envio fica no notebook (a VPS não tem navegador)"],
-  A21:["Victoria","skill panorama-nova-ocorrencia + workflows analise-sapron-implantacao e analise-sapron-manutencao + Agendador do Windows \"Claude Panorama Nova Ocorrencia\" (máquina da Victoria) · na VPS do time vai entregar por DM da Navi; aguarda o Lovable e a conta do Claude da VPS"],
-  A22:["Victoria","skill responder-airbnb + rotina ~/rotinas/responder-airbnb na VPS do time (lote e textos) · publicação pelo Chrome no notebook da Victoria"],
-  A23:["Victoria","rotina ~/rotinas/navi na VPS do time (app Navi no Slack) · hoje ainda roda pelo Agendador do Windows"],
+  A19:["Victoria","agente triagem-comentarios-negativos (seazone/comentarios/.claude/agents) + Agendador do Windows \"Claude Triagem Comentarios\" (máquina da Victoria) · migração para a VPS do time aguardando o Lovable na VPS"],
+  A20:["Victoria","skill contestar-airbnb · seleção (8h) e relatório (21h30) pela rotina ~/rotinas/contestar-airbnb na VPS do time · envio pelo Agendador do Windows \"contestar-airbnb-manha\" (rotina/contestar.ps1) no notebook da Victoria (a VPS não tem navegador)"],
+  A21:["Victoria","skill panorama-nova-ocorrencia + workflows analise-sapron-implantacao e analise-sapron-manutencao + Agendador do Windows \"Claude Panorama Nova Ocorrencia\" (máquina da Victoria) · na VPS do time vai entregar por DM da Navi; aguarda o Lovable na VPS"],
+  A22:["Victoria","skill responder-airbnb + rotina ~/rotinas/responder-airbnb na VPS do time (lote e textos, segunda a sexta às 9h) · publicação pelo Chrome no notebook da Victoria"],
+  A23:["Victoria","rotina ~/rotinas/navi na VPS do time (app Navi no Slack; crontab: todo dia às 15h e sexta às 16h)"],
   A24:["Victoria","rotina ~/rotinas/elogios-franquias na VPS do time (crontab, 10h30)"],
   S1:["Bill (skill) · Qualidade executa","skill contestar-airbnb"], S2:["Victoria",SK("panorama-nova-ocorrencia")], S3:["Victoria",SK("analise-sapron-implantacao")],
   S7:["Victoria",SK("cobrar-sapron")], S8:["Victoria",SK("respostas-sapron")], S9:["Victoria",SK("responder-airbnb")],
@@ -852,7 +852,7 @@ const AUTOS = [
      o:"Analisa os comentários de nota 0,5 a 3,5 que chegaram no dia (na segunda, também os de sábado e domingo) e dá o parecer de ocorrência, com a subcategoria, e de manutenção. Ao terminar, abre o terminal com o parecer e envia pelos botões do Lovable de comentários só depois da minha aprovação.",
      v:"Nenhum comentário negativo fica sem análise no dia em que chega, sem depender de eu lembrar de rodar a skill. Eu só aprovo.",
      s:["1.4"]},
-    {id:"A20", n:"Agente da rotina de contestações do Airbnb", st:"ar", f:"Agente · todo dia às 9h ou quando o computador liga",
+    {id:"A20", n:"Agente da rotina de contestações do Airbnb", st:"ar", f:"Agente · seleção todo dia às 8h na VPS; envio às 9h ou quando o computador liga",
      o:"Puxa as avaliações novas do Airbnb abaixo de 5, classifica pela régua calibrada e monta o lote do dia, até 25. Se o computador ficou desligado, acumula: a rodada seguinte pega tudo o que chegou e fecha os relatórios das noites perdidas. Ao terminar, abre o terminal mostrando o que acumulou, o lote e o que pede o meu ok, e envia pelo Chrome só depois da minha aprovação. Às 21h30 fecha o dia com placar e relatório.",
      v:"Nenhuma avaliação contestável fica para trás por falta de rodada: até 16/11 a skill rodava à mão e pulou de 13 a 15/11. Eu só aprovo o envio.",
      s:["2.1","2.2","2.3"]},
